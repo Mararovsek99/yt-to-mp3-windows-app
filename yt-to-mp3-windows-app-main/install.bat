@@ -1,9 +1,10 @@
 @echo off
 setlocal EnableExtensions
+cd /d "%~dp0"
 title YT to MP3 - Install
 
 call setup.bat
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
     echo [ERROR] Setup ni uspel. Build se ne bo zagnal.
     pause
@@ -11,7 +12,7 @@ if %errorlevel% neq 0 (
 )
 
 call build.bat
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
     echo [ERROR] Build ni uspel.
     pause
@@ -24,6 +25,5 @@ echo     ALL DONE - YT to MP3 IS READY
 echo ==========================================
 echo Aplikacija je v:
 echo dist\YTtoMP3\
-echo.
 pause
 exit /b 0

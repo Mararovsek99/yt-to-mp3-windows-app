@@ -17,7 +17,7 @@ Simple Windows GUI app for downloading YouTube audio (MP3) or video using yt-dlp
    build.bat
 
 5. Run from:
-   dist/YouTubeDownloader/
+   dist/YouTubeDownloader/YoutubeToMp3.exe
 
 ## Notes
 

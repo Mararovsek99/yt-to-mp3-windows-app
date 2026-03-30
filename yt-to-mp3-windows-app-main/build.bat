@@ -1,5 +1,6 @@
 @echo off
 setlocal EnableExtensions
+cd /d "%~dp0"
 title YT to MP3 - Build
 
 echo ==========================================
@@ -7,25 +8,31 @@ echo           YT to MP3 BUILD
 echo ==========================================
 echo.
 
-if not exist app.py (
+if not exist "app.py" (
     echo [ERROR] app.py manjka.
     pause
     exit /b 1
 )
 
-if not exist bin\yt-dlp.exe (
+if not exist "requirements.txt" (
+    echo [ERROR] requirements.txt manjka.
+    pause
+    exit /b 1
+)
+
+if not exist "bin\yt-dlp.exe" (
     echo [ERROR] bin\yt-dlp.exe manjka. Najprej zazeni setup.bat
     pause
     exit /b 1
 )
 
-if not exist bin\ffmpeg.exe (
+if not exist "bin\ffmpeg.exe" (
     echo [ERROR] bin\ffmpeg.exe manjka. Najprej zazeni setup.bat
     pause
     exit /b 1
 )
 
-if not exist bin\ffprobe.exe (
+if not exist "bin\ffprobe.exe" (
     echo [ERROR] bin\ffprobe.exe manjka. Najprej zazeni setup.bat
     pause
     exit /b 1
@@ -41,11 +48,12 @@ echo [2/3] Gradim aplikacijo...
 py -m PyInstaller ^
   --noconfirm ^
   --windowed ^
-  --name YTtoMP3 ^
+  --name YoutubeToMp3 ^
+  --icon icon.ico ^
   --add-data "bin;bin" ^
   app.py
 
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] Build ni uspel.
     pause
     exit /b 1
@@ -55,6 +63,5 @@ echo.
 echo [3/3] Build completed.
 echo Output:
 echo dist\YTtoMP3\
-echo.
 pause
 exit /b 0

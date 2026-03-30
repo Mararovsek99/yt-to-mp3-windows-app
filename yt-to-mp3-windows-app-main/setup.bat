@@ -1,5 +1,6 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
+cd /d "%~dp0"
 title YT to MP3 - Setup
 
 echo ==========================================
@@ -8,16 +9,16 @@ echo ==========================================
 echo.
 
 where py >nul 2>nul
-if %errorlevel% neq 0 (
-    echo [ERROR] Python launcher (py) ni namescen ali ni v PATH.
-    echo Namesti Python za Windows in obkljukaj "Add Python to PATH".
+if errorlevel 1 (
+    echo [ERROR] Python launcher py ni namescen ali ni v PATH.
+    echo Namesti Python za Windows in obkljukaj Add Python to PATH.
     pause
     exit /b 1
 )
 
 echo [1/5] Preverjam Python...
 py --version
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] Python ni pravilno namescen.
     pause
     exit /b 1
@@ -26,7 +27,7 @@ if %errorlevel% neq 0 (
 echo.
 echo [2/5] Nadgrajujem pip...
 py -m pip install --upgrade pip
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] pip upgrade ni uspel.
     pause
     exit /b 1
@@ -35,7 +36,7 @@ if %errorlevel% neq 0 (
 echo.
 echo [3/5] Namescam Python pakete...
 py -m pip install -r requirements.txt
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] Namestitev requirements.txt ni uspela.
     pause
     exit /b 1
@@ -61,25 +62,26 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "Copy-Item $ffprobe.FullName 'bin\\ffprobe.exe' -Force;" ^
   "Remove-Item 'bin\\ffmpeg.zip' -Force;" ^
   "Remove-Item 'bin\\ffmpeg_temp' -Recurse -Force;"
-if %errorlevel% neq 0 (
+
+if errorlevel 1 (
     echo [ERROR] Download ali extract za yt-dlp / FFmpeg ni uspel.
     pause
     exit /b 1
 )
 
-if not exist bin\yt-dlp.exe (
+if not exist "bin\yt-dlp.exe" (
     echo [ERROR] bin\yt-dlp.exe manjka.
     pause
     exit /b 1
 )
 
-if not exist bin\ffmpeg.exe (
+if not exist "bin\ffmpeg.exe" (
     echo [ERROR] bin\ffmpeg.exe manjka.
     pause
     exit /b 1
 )
 
-if not exist bin\ffprobe.exe (
+if not exist "bin\ffprobe.exe" (
     echo [ERROR] bin\ffprobe.exe manjka.
     pause
     exit /b 1
@@ -89,7 +91,5 @@ echo.
 echo ==========================================
 echo Setup completed successfully.
 echo ==========================================
-echo Zdaj lahko zazenes build.bat ali install.bat
-echo.
 pause
 exit /b 0
