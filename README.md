@@ -3,7 +3,8 @@
 Simple Windows GUI app for downloading YouTube audio (MP3) using yt-dlp.
 
 The best thing is, that you can download list of songs or just one video. with one click.
-
+## View app
+https://www.youtube.com/watch?v=akhA51npcCw
 ## Setup (Windows)
 
 1. Install Python
