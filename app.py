@@ -19,7 +19,7 @@ from version import APP_VERSION
 
 
 APP_TITLE = "YT to MP3"
-GITHUB_OWNER = "Marovsek99"
+GITHUB_OWNER = "Mararovsek99"
 GITHUB_REPO = "yt-to-mp3-windows-app"
 INSTALLER_ASSET_NAME = "YoutubeToMp3-Setup.exe"
 UPDATE_API_URL = (
