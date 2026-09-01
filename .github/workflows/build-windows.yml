@@ -16,18 +16,79 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Check required files
+      - name: Create bin folder
         shell: powershell
         run: |
-          if (!(Test-Path "app.py")) { throw "app.py missing" }
-          if (!(Test-Path "bin\yt-dlp.exe")) { throw "yt-dlp.exe missing" }
-          if (!(Test-Path "bin\ffmpeg.exe")) { throw "ffmpeg.exe missing" }
-          if (!(Test-Path "bin\ffprobe.exe")) { throw "ffprobe.exe missing" }
+          New-Item -ItemType Directory -Force -Path "bin"
+
+      - name: Download latest yt-dlp
+        shell: powershell
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" `
+            -OutFile "bin\yt-dlp.exe"
+
+      - name: Download FFmpeg
+        shell: powershell
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" `
+            -OutFile "ffmpeg.zip"
+
+      - name: Extract FFmpeg
+        shell: powershell
+        run: |
+          Expand-Archive -Path "ffmpeg.zip" -DestinationPath "ffmpeg_temp"
+
+          $ffmpeg = Get-ChildItem -Path "ffmpeg_temp" -Recurse -Filter "ffmpeg.exe" | Select-Object -First 1
+          $ffprobe = Get-ChildItem -Path "ffmpeg_temp" -Recurse -Filter "ffprobe.exe" | Select-Object -First 1
+
+          if (-not $ffmpeg) {
+              throw "ffmpeg.exe not found after extraction"
+          }
+
+          if (-not $ffprobe) {
+              throw "ffprobe.exe not found after extraction"
+          }
+
+          Copy-Item $ffmpeg.FullName "bin\ffmpeg.exe"
+          Copy-Item $ffprobe.FullName "bin\ffprobe.exe"
+
+      - name: Check downloaded files
+        shell: powershell
+        run: |
+          Write-Host "Downloaded tools:"
+          Get-ChildItem "bin"
+
+          $ytdlpSize = (Get-Item "bin\yt-dlp.exe").Length
+          $ffmpegSize = (Get-Item "bin\ffmpeg.exe").Length
+          $ffprobeSize = (Get-Item "bin\ffprobe.exe").Length
+
+          Write-Host "yt-dlp size: $ytdlpSize"
+          Write-Host "ffmpeg size: $ffmpegSize"
+          Write-Host "ffprobe size: $ffprobeSize"
+
+          if ($ytdlpSize -lt 1000000) {
+              throw "yt-dlp.exe seems invalid"
+          }
+
+          if ($ffmpegSize -lt 1000000) {
+              throw "ffmpeg.exe seems invalid"
+          }
+
+          if ($ffprobeSize -lt 1000000) {
+              throw "ffprobe.exe seems invalid"
+          }
+
+      - name: Show yt-dlp version
+        shell: powershell
+        run: |
+          .\bin\yt-dlp.exe --version
 
       - name: Build application
         shell: powershell
@@ -41,6 +102,16 @@ jobs:
             --icon "icon.ico" `
             --add-data "bin;bin" `
             app.py
+
+      - name: Verify final build
+        shell: powershell
+        run: |
+          Write-Host "Final build contents:"
+          Get-ChildItem -Path "dist\YoutubeToMp3" -Recurse
+
+          if (!(Test-Path "dist\YoutubeToMp3\YoutubeToMp3.exe")) {
+              throw "YoutubeToMp3.exe missing"
+          }
 
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
