@@ -813,7 +813,7 @@ class YTToMP3App:
 
             saved_titles = data.get("last_successful_titles", [])
             for title in saved_titles[-5:]:
-                self.last_successful_titles.append(transliterate_text(title))
+                self.last_successful_titles.append(title)
         except Exception:
             pass
 
@@ -1100,7 +1100,7 @@ class YTToMP3App:
         self.save_settings()
 
     def apply_language(self):
-        self.root.title(f'{self.texts["window_title"]} · v{APP_VERSION}')
+        self.root.title(f"YT to MP3 · v{APP_VERSION}")
         self.title_label.config(text="YT to MP3")
         self.subtitle_label.config(text=self.texts["subtitle"])
         self.language_label.config(text=self.texts["language_label"])
@@ -1510,7 +1510,7 @@ class YTToMP3App:
                     self.status_text.set(f'{self.texts["status_downloading"]} {int(clamped)}%')
 
             elif action == "current_title":
-                self.current_title_text.set(transliterate_text(value))
+                self.current_title_text.set(value)
                 self.refresh_eta()
 
             elif action == "playlist_pos":
@@ -1525,7 +1525,7 @@ class YTToMP3App:
 
             elif action == "success_title":
                 self.success_count += 1
-                clean_title = transliterate_text(value)
+                clean_title = value
                 self.last_successful_titles.append(clean_title)
                 self.refresh_log_view()
                 self.save_settings()
