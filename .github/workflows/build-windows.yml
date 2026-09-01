@@ -49,40 +49,37 @@ jobs:
           $ffprobe = Get-ChildItem -Path "ffmpeg_temp" -Recurse -Filter "ffprobe.exe" | Select-Object -First 1
 
           if (-not $ffmpeg) {
-              throw "ffmpeg.exe not found after extraction"
+              throw "ffmpeg.exe not found"
           }
 
           if (-not $ffprobe) {
-              throw "ffprobe.exe not found after extraction"
+              throw "ffprobe.exe not found"
           }
 
           Copy-Item $ffmpeg.FullName "bin\ffmpeg.exe"
           Copy-Item $ffprobe.FullName "bin\ffprobe.exe"
 
-      - name: Check downloaded files
+      - name: Verify downloaded tools
         shell: powershell
         run: |
-          Write-Host "Downloaded tools:"
-          Get-ChildItem "bin"
-
           $ytdlpSize = (Get-Item "bin\yt-dlp.exe").Length
           $ffmpegSize = (Get-Item "bin\ffmpeg.exe").Length
           $ffprobeSize = (Get-Item "bin\ffprobe.exe").Length
 
-          Write-Host "yt-dlp size: $ytdlpSize"
-          Write-Host "ffmpeg size: $ffmpegSize"
-          Write-Host "ffprobe size: $ffprobeSize"
+          Write-Host "yt-dlp: $ytdlpSize bytes"
+          Write-Host "ffmpeg: $ffmpegSize bytes"
+          Write-Host "ffprobe: $ffprobeSize bytes"
 
           if ($ytdlpSize -lt 1000000) {
-              throw "yt-dlp.exe seems invalid"
+              throw "yt-dlp.exe invalid"
           }
 
           if ($ffmpegSize -lt 1000000) {
-              throw "ffmpeg.exe seems invalid"
+              throw "ffmpeg.exe invalid"
           }
 
           if ($ffprobeSize -lt 1000000) {
-              throw "ffprobe.exe seems invalid"
+              throw "ffprobe.exe invalid"
           }
 
       - name: Show yt-dlp version
@@ -103,18 +100,27 @@ jobs:
             --add-data "bin;bin" `
             app.py
 
-      - name: Verify final build
+      - name: Install Inno Setup
         shell: powershell
         run: |
-          Write-Host "Final build contents:"
-          Get-ChildItem -Path "dist\YoutubeToMp3" -Recurse
+          choco install innosetup -y
 
-          if (!(Test-Path "dist\YoutubeToMp3\YoutubeToMp3.exe")) {
-              throw "YoutubeToMp3.exe missing"
+      - name: Build installer
+        shell: powershell
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer\installer.iss"
+
+      - name: Verify installer
+        shell: powershell
+        run: |
+          if (!(Test-Path "installer\output\YoutubeToMp3-Setup.exe")) {
+              throw "Installer was not created"
           }
 
-      - name: Upload Windows build
+          Get-Item "installer\output\YoutubeToMp3-Setup.exe"
+
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: YoutubeToMp3-Windows
-          path: dist/YoutubeToMp3/
+          name: YoutubeToMp3-Setup
+          path: installer/output/YoutubeToMp3-Setup.exe
