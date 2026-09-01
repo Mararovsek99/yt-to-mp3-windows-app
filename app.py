@@ -12,9 +12,19 @@ from pathlib import Path
 from collections import deque
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import urllib.request
+import tempfile
+
+from version import APP_VERSION
 
 
 APP_TITLE = "YT to MP3"
+GITHUB_OWNER = "Marovsek99"
+GITHUB_REPO = "yt-to-mp3-windows-app"
+INSTALLER_ASSET_NAME = "YoutubeToMp3-Setup.exe"
+UPDATE_API_URL = (
+    f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest"
+)
 CONFIG_FILE = "config.json"
 WINDOW_SIZE = "700x560"
 MIN_WIDTH = 560
@@ -710,6 +720,22 @@ class ScrollableFrame(tk.Frame):
         self.canvas.bind_all("<Button-4>", _on_mousewheel)
         self.canvas.bind_all("<Button-5>", _on_mousewheel)
 
+def version_tuple(version: str):
+    version = version.strip().lower().lstrip("v")
+    parts = []
+
+    for part in version.split("."):
+        match = re.match(r"\d+", part)
+        parts.append(int(match.group()) if match else 0)
+
+    while len(parts) < 3:
+        parts.append(0)
+
+    return tuple(parts[:3])
+
+
+def is_newer_version(latest: str, current: str) -> bool:
+    return version_tuple(latest) > version_tuple(current)
 
 class YTToMP3App:
     def __init__(self, root: tk.Tk) -> None:
@@ -751,6 +777,7 @@ class YTToMP3App:
         self.build_ui()
         self.apply_language()
         self.root.after(100, self.process_ui_queue)
+        self.root.after(2000, self.start_update_check)
 
     def save_settings(self):
         data = {
@@ -1180,6 +1207,196 @@ class YTToMP3App:
             else:
                 lbl.config(text="", fg="#94a3b8")
 
+def start_update_check(self):
+    thread = threading.Thread(
+        target=self.check_for_updates,
+        daemon=True
+    )
+    thread.start()
+
+
+def check_for_updates(self):
+    try:
+        request = urllib.request.Request(
+            UPDATE_API_URL,
+            headers={
+                "User-Agent": f"YT-to-MP3/{APP_VERSION}",
+                "Accept": "application/vnd.github+json",
+            },
+        )
+
+        with urllib.request.urlopen(request, timeout=8) as response:
+            data = json.loads(response.read().decode("utf-8"))
+
+        latest_version = data.get("tag_name", "").lstrip("v")
+
+        if not latest_version:
+            return
+
+        if not is_newer_version(latest_version, APP_VERSION):
+            return
+
+        installer_url = None
+
+        for asset in data.get("assets", []):
+            if asset.get("name") == INSTALLER_ASSET_NAME:
+                installer_url = asset.get("browser_download_url")
+                break
+
+        if not installer_url:
+            return
+
+        self.root.after(
+            0,
+            lambda: self.show_update_available(
+                latest_version,
+                installer_url
+            )
+        )
+
+    except Exception:
+        # Update checker nikoli ne sme motiti normalnega delovanja aplikacije.
+        pass
+
+
+def show_update_available(self, latest_version, installer_url):
+    answer = messagebox.askyesno(
+        APP_TITLE,
+        (
+            f"Na voljo je nova različica YT to MP3.\n\n"
+            f"Trenutna različica: {APP_VERSION}\n"
+            f"Nova različica: {latest_version}\n\n"
+            f"Želiš posodobiti zdaj?"
+        ),
+    )
+
+    if answer:
+        self.download_application_update(
+            latest_version,
+            installer_url
+        )
+
+
+def download_application_update(self, latest_version, installer_url):
+    self.status_text.set(
+        f"Prenašam posodobitev {latest_version} ..."
+    )
+
+    thread = threading.Thread(
+        target=self._download_application_update_worker,
+        args=(latest_version, installer_url),
+        daemon=True,
+    )
+    thread.start()
+
+
+def _download_application_update_worker(
+    self,
+    latest_version,
+    installer_url
+):
+    try:
+        update_dir = os.path.join(
+            tempfile.gettempdir(),
+            "YTtoMP3_Update"
+        )
+
+        os.makedirs(update_dir, exist_ok=True)
+
+        installer_path = os.path.join(
+            update_dir,
+            INSTALLER_ASSET_NAME
+        )
+
+        request = urllib.request.Request(
+            installer_url,
+            headers={
+                "User-Agent": f"YT-to-MP3/{APP_VERSION}"
+            },
+        )
+
+        with urllib.request.urlopen(
+            request,
+            timeout=60
+        ) as response:
+
+            with open(installer_path, "wb") as output:
+                while True:
+                    chunk = response.read(1024 * 1024)
+
+                    if not chunk:
+                        break
+
+                    output.write(chunk)
+
+        if not os.path.exists(installer_path):
+            raise RuntimeError(
+                "Installer was not downloaded."
+            )
+
+        if os.path.getsize(installer_path) < 1_000_000:
+            raise RuntimeError(
+                "Downloaded installer seems invalid."
+            )
+
+        self.root.after(
+            0,
+            lambda: self.launch_application_update(
+                installer_path,
+                latest_version
+            )
+        )
+
+    except Exception:
+        self.root.after(
+            0,
+            lambda: self.status_text.set(
+                "Posodobitve ni bilo mogoče prenesti."
+            )
+        )
+
+
+def launch_application_update(
+    self,
+    installer_path,
+    latest_version
+):
+    answer = messagebox.askyesno(
+        APP_TITLE,
+        (
+            f"Posodobitev {latest_version} je pripravljena.\n\n"
+            f"Aplikacija se bo zaprla in odprl se bo "
+            f"namestitveni program.\n\n"
+            f"Nadaljujem?"
+        ),
+    )
+
+    if not answer:
+        self.status_text.set(
+            self.texts["status_ready"]
+        )
+        return
+
+    try:
+        if sys.platform.startswith("win"):
+            subprocess.Popen(
+                [installer_path],
+                close_fds=True
+            )
+
+            self.root.after(
+                300,
+                self.root.destroy
+            )
+
+        else:
+            webbrowser.open(installer_path)
+
+    except Exception:
+        messagebox.showerror(
+            APP_TITLE,
+            "Posodobitve ni bilo mogoče zagnati."
+        )
     def choose_folder(self):
         selected = filedialog.askdirectory(
             title=self.texts["folder_label"],
