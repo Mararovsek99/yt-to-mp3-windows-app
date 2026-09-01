@@ -1,0 +1,49 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check required files
+        shell: powershell
+        run: |
+          if (!(Test-Path "app.py")) { throw "app.py missing" }
+          if (!(Test-Path "bin\yt-dlp.exe")) { throw "yt-dlp.exe missing" }
+          if (!(Test-Path "bin\ffmpeg.exe")) { throw "ffmpeg.exe missing" }
+          if (!(Test-Path "bin\ffprobe.exe")) { throw "ffprobe.exe missing" }
+
+      - name: Build application
+        shell: powershell
+        run: |
+          pyinstaller `
+            --noconfirm `
+            --clean `
+            --windowed `
+            --onedir `
+            --name "YoutubeToMp3" `
+            --icon "icon.ico" `
+            --add-data "bin;bin" `
+            app.py
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: YoutubeToMp3-Windows
+          path: dist/YoutubeToMp3/
