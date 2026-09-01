@@ -26,12 +26,12 @@ UPDATE_API_URL = (
     f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest"
 )
 CONFIG_FILE = "config.json"
-WINDOW_SIZE = "680x720"
-MIN_WIDTH = 620
+WINDOW_SIZE = "860x760"
+MIN_WIDTH = 760
 MIN_HEIGHT = 650
 LINKEDIN_URL = "https://www.linkedin.com/in/andrej-marov%C5%A1ek-78b040206/"
 
-CONTENT_MAX_WIDTH = 580
+CONTENT_MAX_WIDTH = 760
 
 
 def make_lang(
@@ -769,7 +769,7 @@ class YTToMP3App:
         self.load_settings()
         self.texts = LANGUAGES[self.current_language]
 
-        self.root.title(self.texts["window_title"])
+        self.root.title(f"YT to MP3 · v{APP_VERSION}")
         self.root.geometry(WINDOW_SIZE)
         self.root.minsize(MIN_WIDTH, MIN_HEIGHT)
         self.root.configure(bg="#eef2f7")
@@ -818,83 +818,99 @@ class YTToMP3App:
             pass
 
     def build_ui(self):
-        BG = "#f3f6fb"
+        # Modern 2026-style UI. Existing download/update behaviour is unchanged.
+        BG = "#f5f7fb"
         CARD = "#ffffff"
-        SOFT = "#f8fafc"
-        BORDER = "#e2e8f0"
-        TEXT = "#0f172a"
-        MUTED = "#64748b"
-        RED = "#ef4444"
-        RED_ACTIVE = "#dc2626"
-        BLUE = "#2563eb"
+        BORDER = "#e4e9f2"
+        TEXT = "#111827"
+        MUTED = "#667085"
+        SUBTLE = "#98a2b3"
+        BLUE = "#4f6ef7"
+        BLUE_DARK = "#3657e8"
+        GREEN = "#22a06b"
+        RED = "#ef3340"
+        RED_ACTIVE = "#d92734"
 
         self.root.configure(bg=BG)
 
-        outer = tk.Frame(self.root, bg=BG)
-        outer.pack(fill="both", expand=True)
+        shell = tk.Frame(self.root, bg=BG)
+        shell.pack(fill="both", expand=True)
 
-        content = tk.Frame(outer, bg=BG)
-        content.pack(fill="both", expand=True, padx=34, pady=26)
+        # Top bar
+        topbar = tk.Frame(shell, bg=CARD, height=74)
+        topbar.pack(fill="x")
+        topbar.pack_propagate(False)
 
-        # Header
-        header = tk.Frame(content, bg=BG)
-        header.pack(fill="x", pady=(0, 18))
+        brand = tk.Frame(topbar, bg=CARD)
+        brand.pack(side="left", padx=(28, 0), pady=17)
 
-        header_left = tk.Frame(header, bg=BG)
-        header_left.pack(side="left", fill="x", expand=True)
-
-        self.title_label = tk.Label(
-            header_left, bg=BG, fg=TEXT,
-            font=("Segoe UI", 24, "bold"), anchor="w"
+        logo = tk.Label(
+            brand, text="▶", bg=BLUE, fg="white",
+            font=("Segoe UI", 10, "bold"), width=3, height=1
         )
-        self.title_label.pack(anchor="w")
+        logo.pack(side="left", padx=(0, 12))
 
-        self.subtitle_label = tk.Label(
-            header_left, bg=BG, fg=MUTED,
-            font=("Segoe UI", 9), anchor="w", justify="left",
-            wraplength=390
-        )
-        self.subtitle_label.pack(anchor="w", pady=(4, 0))
-
-        header_right = tk.Frame(header, bg=BG)
-        header_right.pack(side="right", anchor="ne")
+        tk.Label(
+            brand, text="YT to MP3", bg=CARD, fg=TEXT,
+            font=("Segoe UI", 15, "bold")
+        ).pack(side="left")
 
         self.version_label = tk.Label(
-            header_right, text=f"v{APP_VERSION}", bg=BG, fg="#94a3b8",
-            font=("Segoe UI", 8, "bold")
+            brand, text=f"v{APP_VERSION}",
+            bg="#eef2ff", fg=BLUE_DARK,
+            font=("Segoe UI", 8, "bold"), padx=8, pady=4
         )
-        self.version_label.pack(anchor="e", pady=(0, 5))
+        self.version_label.pack(side="left", padx=(10, 0))
 
-        lang_row = tk.Frame(header_right, bg=BG)
-        lang_row.pack(anchor="e")
+        lang_wrap = tk.Frame(topbar, bg=CARD)
+        lang_wrap.pack(side="right", padx=(0, 28), pady=16)
 
         self.language_label = tk.Label(
-            lang_row, bg=BG, fg=MUTED, font=("Segoe UI", 8, "bold")
+            lang_wrap, bg=CARD, fg=MUTED,
+            font=("Segoe UI", 8, "bold")
         )
-        self.language_label.pack(side="left", padx=(0, 7))
+        self.language_label.pack(side="left", padx=(0, 8))
 
         self.language_combo = tk.OptionMenu(
-            lang_row, self.language_var, *sorted(LANGUAGES.keys()),
+            lang_wrap, self.language_var, *sorted(LANGUAGES.keys()),
             command=lambda _=None: self.on_language_change()
         )
         self.language_combo.config(
-            font=("Segoe UI", 8), bg=CARD, fg=TEXT,
-            activebackground=SOFT, activeforeground=TEXT,
+            font=("Segoe UI", 9), bg="#fafbfc", fg=TEXT,
+            activebackground="#f2f4f7", activeforeground=TEXT,
             relief="solid", bd=1, highlightthickness=0,
-            width=13, padx=4, pady=3
+            width=14, padx=6, pady=5
         )
-        self.language_combo["menu"].config(font=("Segoe UI", 8))
+        self.language_combo["menu"].config(font=("Segoe UI", 9))
         self.language_combo.pack(side="left")
 
-        # Current download card
+        tk.Frame(shell, bg=BORDER, height=1).pack(fill="x")
+
+        # Main content
+        content = tk.Frame(shell, bg=BG)
+        content.pack(fill="both", expand=True, padx=52, pady=(30, 18))
+
+        self.title_label = tk.Label(
+            content, text="YT to MP3", bg=BG, fg=TEXT,
+            font=("Segoe UI", 30, "bold")
+        )
+        self.title_label.pack()
+
+        self.subtitle_label = tk.Label(
+            content, bg=BG, fg=MUTED,
+            font=("Segoe UI", 11), wraplength=700, justify="center"
+        )
+        self.subtitle_label.pack(pady=(8, 24))
+
+        # Current item card
         current_card = tk.Frame(
-            content, bg=CARD, highlightbackground=BORDER,
-            highlightthickness=1, bd=0
+            content, bg=CARD, bd=0,
+            highlightbackground=BORDER, highlightthickness=1
         )
         current_card.pack(fill="x", pady=(0, 14))
 
         current_inner = tk.Frame(current_card, bg=CARD)
-        current_inner.pack(fill="x", padx=18, pady=15)
+        current_inner.pack(fill="x", padx=22, pady=17)
 
         self.current_item_caption = tk.Label(
             current_inner, bg=CARD, fg=MUTED,
@@ -904,10 +920,10 @@ class YTToMP3App:
 
         self.current_item_value = tk.Label(
             current_inner, textvariable=self.current_title_text,
-            bg=CARD, fg=TEXT, font=("Segoe UI", 11, "bold"),
-            anchor="w", justify="left", wraplength=CONTENT_MAX_WIDTH - 40
+            bg=CARD, fg=TEXT, font=("Segoe UI", 12, "bold"),
+            anchor="w", justify="left", wraplength=690
         )
-        self.current_item_value.pack(fill="x", pady=(5, 12))
+        self.current_item_value.pack(fill="x", pady=(7, 14))
 
         info_row = tk.Frame(current_inner, bg=CARD)
         info_row.pack(fill="x")
@@ -916,9 +932,11 @@ class YTToMP3App:
         left_info.pack(side="left")
 
         self.playlist_progress_caption = tk.Label(
-            left_info, bg=CARD, fg=MUTED, font=("Segoe UI", 8, "bold")
+            left_info, bg=CARD, fg=MUTED,
+            font=("Segoe UI", 8, "bold")
         )
         self.playlist_progress_caption.pack(side="left")
+
         self.playlist_progress_value = tk.Label(
             left_info, textvariable=self.playlist_counter_text,
             bg=CARD, fg=TEXT, font=("Segoe UI", 8)
@@ -929,156 +947,173 @@ class YTToMP3App:
         right_info.pack(side="right")
 
         self.eta_caption = tk.Label(
-            right_info, bg=CARD, fg=MUTED, font=("Segoe UI", 8, "bold")
+            right_info, bg=CARD, fg=MUTED,
+            font=("Segoe UI", 8, "bold")
         )
         self.eta_caption.pack(side="left")
+
         self.eta_value = tk.Label(
             right_info, textvariable=self.eta_text,
             bg=CARD, fg=TEXT, font=("Segoe UI", 8)
         )
         self.eta_value.pack(side="left", padx=(5, 0))
 
-        # Primary action
+        # Existing behaviour: this button reads the YouTube URL from clipboard.
         self.download_button = tk.Button(
             content, text="", command=self.on_download_click,
-            bg=RED, fg="white", activebackground=RED_ACTIVE,
-            activeforeground="white", relief="flat", bd=0,
-            font=("Segoe UI", 11, "bold"), cursor="hand2",
-            padx=14, pady=12
+            bg=RED, fg="white",
+            activebackground=RED_ACTIVE, activeforeground="white",
+            disabledforeground="white",
+            relief="flat", bd=0,
+            font=("Segoe UI", 12, "bold"),
+            cursor="hand2", padx=16, pady=14
         )
-        self.download_button.pack(fill="x")
+        self.download_button.pack(fill="x", pady=(0, 10))
 
-        action_options = tk.Frame(content, bg=BG)
-        action_options.pack(fill="x", pady=(8, 12))
+        controls = tk.Frame(content, bg=BG)
+        controls.pack(fill="x", pady=(0, 14))
 
         self.playlist_check = tk.Checkbutton(
-            action_options, text="", variable=self.allow_playlist_var,
+            controls, text="", variable=self.allow_playlist_var,
             bg=BG, fg=TEXT, activebackground=BG, activeforeground=TEXT,
-            font=("Segoe UI", 8), selectcolor=BG, bd=0,
-            highlightthickness=0
+            font=("Segoe UI", 9), selectcolor=BG,
+            bd=0, highlightthickness=0
         )
         self.playlist_check.pack(side="left")
 
         self.stop_button = tk.Button(
-            action_options, text="", command=self.stop_download,
-            bg="#e5e7eb", fg="#6b7280",
-            activebackground="#d1d5db", activeforeground="#374151",
-            relief="flat", bd=0, font=("Segoe UI", 8, "bold"),
-            cursor="hand2", padx=12, pady=5, state="disabled"
+            controls, text="", command=self.stop_download,
+            bg="#eaecf0", fg="#667085",
+            activebackground="#dfe3e8", activeforeground=TEXT,
+            relief="flat", bd=0,
+            font=("Segoe UI", 9, "bold"),
+            cursor="hand2", padx=14, pady=7,
+            state="disabled"
         )
         self.stop_button.pack(side="right")
 
         # Progress
-        progress_head = tk.Frame(content, bg=BG)
-        progress_head.pack(fill="x", pady=(0, 5))
+        progress_header = tk.Frame(content, bg=BG)
+        progress_header.pack(fill="x", pady=(0, 6))
 
         self.status_label = tk.Label(
-            progress_head, textvariable=self.status_text,
-            bg=BG, fg=BLUE, font=("Segoe UI", 8, "bold"), anchor="w"
+            progress_header, textvariable=self.status_text,
+            bg=BG, fg=BLUE_DARK,
+            font=("Segoe UI", 9, "bold"), anchor="w"
         )
         self.status_label.pack(side="left")
 
         self.progress_percent_label = tk.Label(
-            progress_head, text="0%", bg=BG, fg=MUTED,
-            font=("Segoe UI", 8, "bold")
+            progress_header, text="0%",
+            bg=BG, fg=MUTED, font=("Segoe UI", 9, "bold")
         )
         self.progress_percent_label.pack(side="right")
 
-        progress_outer = tk.Frame(content, bg="#dbe3ee", height=8)
-        progress_outer.pack(fill="x", pady=(0, 16))
+        progress_outer = tk.Frame(content, bg="#e9edf5", height=8)
+        progress_outer.pack(fill="x", pady=(0, 20))
         progress_outer.pack_propagate(False)
 
         self.progress_fill = tk.Frame(progress_outer, bg=BLUE, width=0)
         self.progress_fill.place(x=0, y=0, relheight=1)
 
-        # Folder card
-        folder_card = tk.Frame(
-            content, bg=CARD, highlightbackground=BORDER,
-            highlightthickness=1, bd=0
+        # Recent downloads title + open folder
+        section_head = tk.Frame(content, bg=BG)
+        section_head.pack(fill="x", pady=(0, 10))
+
+        self.log_title_label = tk.Label(
+            section_head, bg=BG, fg=TEXT,
+            font=("Segoe UI", 13, "bold"), anchor="w"
         )
-        folder_card.pack(fill="x", pady=(0, 14))
-
-        folder_inner = tk.Frame(folder_card, bg=CARD)
-        folder_inner.pack(fill="x", padx=18, pady=14)
-
-        folder_top = tk.Frame(folder_inner, bg=CARD)
-        folder_top.pack(fill="x", pady=(0, 8))
-
-        self.folder_title_label = tk.Label(
-            folder_top, bg=CARD, fg=TEXT,
-            font=("Segoe UI", 9, "bold"), anchor="w"
-        )
-        self.folder_title_label.pack(side="left")
+        self.log_title_label.pack(side="left")
 
         self.open_button = tk.Button(
-            folder_top, text="", command=self.open_folder,
-            bg=CARD, fg=BLUE, activebackground=CARD,
-            activeforeground="#1d4ed8", relief="flat", bd=0,
-            font=("Segoe UI", 8, "bold"), cursor="hand2", padx=0, pady=0
+            section_head, text="", command=self.open_folder,
+            bg=CARD, fg=TEXT,
+            activebackground="#f2f4f7", activeforeground=TEXT,
+            relief="solid", bd=1,
+            font=("Segoe UI", 9, "bold"),
+            cursor="hand2", padx=12, pady=6
         )
         self.open_button.pack(side="right")
 
-        folder_row = tk.Frame(folder_inner, bg=CARD)
-        folder_row.pack(fill="x")
+        # Folder
+        folder_card = tk.Frame(
+            content, bg=CARD, bd=0,
+            highlightbackground=BORDER, highlightthickness=1
+        )
+        folder_card.pack(fill="x", pady=(0, 10))
+
+        folder_inner = tk.Frame(folder_card, bg=CARD)
+        folder_inner.pack(fill="x", padx=18, pady=11)
+
+        self.folder_title_label = tk.Label(
+            folder_inner, bg=CARD, fg=MUTED,
+            font=("Segoe UI", 8, "bold")
+        )
+        self.folder_title_label.pack(side="left", padx=(0, 10))
 
         self.folder_entry = tk.Entry(
-            folder_row, textvariable=self.download_folder,
-            font=("Segoe UI", 9), relief="solid", bd=1,
-            bg=SOFT, fg=TEXT, insertbackground=TEXT
+            folder_inner, textvariable=self.download_folder,
+            font=("Segoe UI", 9), relief="flat", bd=0,
+            bg=CARD, fg=TEXT, insertbackground=TEXT
         )
-        self.folder_entry.pack(side="left", fill="x", expand=True, ipady=7)
+        self.folder_entry.pack(side="left", fill="x", expand=True, ipady=4)
 
         self.browse_button = tk.Button(
-            folder_row, text="", command=self.choose_folder,
-            bg="#eef2f7", fg=TEXT, activebackground="#e2e8f0",
-            activeforeground=TEXT, relief="flat", bd=0,
-            font=("Segoe UI", 8, "bold"), cursor="hand2",
-            padx=12, pady=8
+            folder_inner, text="", command=self.choose_folder,
+            bg="#f2f4f7", fg=TEXT,
+            activebackground="#e8ebef", activeforeground=TEXT,
+            relief="flat", bd=0,
+            font=("Segoe UI", 8, "bold"),
+            cursor="hand2", padx=11, pady=6
         )
-        self.browse_button.pack(side="left", padx=(8, 0))
+        self.browse_button.pack(side="right", padx=(10, 0))
 
-        # Recent downloads
-        log_box = tk.Frame(
-            content, bg=CARD, highlightbackground=BORDER,
-            highlightthickness=1, bd=0
-        )
-        log_box.pack(fill="x", pady=(0, 14))
-
-        self.log_title_label = tk.Label(
-            log_box, bg=CARD, fg=TEXT, font=("Segoe UI", 9, "bold"),
-            anchor="w", padx=18, pady=12
-        )
-        self.log_title_label.pack(fill="x")
-
+        # Last five downloads — same data as before, modern card layout.
         self.log_labels = []
         for _ in range(5):
-            lbl = tk.Label(
-                log_box, bg=CARD, fg="#475569",
-                font=("Segoe UI", 8), anchor="w", justify="left",
-                wraplength=CONTENT_MAX_WIDTH - 40,
-                padx=18, pady=3
+            row = tk.Frame(
+                content, bg=CARD, bd=0,
+                highlightbackground=BORDER, highlightthickness=1
             )
-            lbl.pack(fill="x")
+            row.pack(fill="x", pady=(0, 7))
+
+            tk.Label(
+                row, text="✓", bg=CARD, fg=GREEN,
+                font=("Segoe UI", 12, "bold"), width=3
+            ).pack(side="left", padx=(8, 2), pady=10)
+
+            lbl = tk.Label(
+                row, bg=CARD, fg="#344054",
+                font=("Segoe UI", 9),
+                anchor="w", justify="left",
+                wraplength=620, padx=6, pady=10
+            )
+            lbl.pack(side="left", fill="x", expand=True)
             self.log_labels.append(lbl)
 
-        tk.Frame(log_box, bg=CARD, height=8).pack()
-
         # Footer
-        footer = tk.Frame(content, bg=BG)
-        footer.pack(fill="x", pady=(0, 2))
+        footer = tk.Frame(shell, bg=CARD, height=56)
+        footer.pack(fill="x", side="bottom")
+        footer.pack_propagate(False)
+
+        tk.Frame(footer, bg=BORDER, height=1).pack(fill="x")
 
         self.tip_label = tk.Label(
-            footer, bg=BG, fg="#94a3b8", font=("Segoe UI", 7),
-            wraplength=400, justify="left", anchor="w"
+            footer, bg=CARD, fg=SUBTLE,
+            font=("Segoe UI", 8),
+            wraplength=500, justify="left", anchor="w"
         )
-        self.tip_label.pack(side="left", fill="x", expand=True)
+        self.tip_label.pack(side="left", padx=(28, 0), pady=17)
 
         self.credit_label = tk.Label(
-            footer, bg=BG, fg=BLUE, font=("Segoe UI", 7),
-            cursor="hand2"
+            footer, bg=CARD, fg=MUTED,
+            font=("Segoe UI", 8), cursor="hand2"
         )
-        self.credit_label.pack(side="right")
-        self.credit_label.bind("<Button-1>", lambda e: webbrowser.open(LINKEDIN_URL))
+        self.credit_label.pack(side="right", padx=(0, 28), pady=17)
+        self.credit_label.bind(
+            "<Button-1>", lambda e: webbrowser.open(LINKEDIN_URL)
+        )
 
         self.root.bind("<Configure>", self.on_resize)
 
@@ -1140,7 +1175,7 @@ class YTToMP3App:
 
         for i, lbl in enumerate(self.log_labels):
             if i < len(titles):
-                lbl.config(text=f"✓  {titles[i]}", fg="#334155")
+                lbl.config(text=titles[i], fg="#344054")
             elif i == 0:
                 lbl.config(text=self.texts["nothing_yet"], fg="#94a3b8")
             else:
@@ -1652,7 +1687,7 @@ class YTToMP3App:
 
     def finish_success(self):
         self.is_downloading = False
-        self.download_button.config(state="normal", bg="#ef4444", activebackground="#dc2626")
+        self.download_button.config(state="normal", bg="#ef3340", activebackground="#d92734")
         self.stop_button.config(state="disabled", bg="#e5e7eb", fg="#6b7280")
         self.progress_var.set(100)
         self.progress_percent_label.config(text="100%")
@@ -1668,7 +1703,7 @@ class YTToMP3App:
 
     def finish_error(self, _error_message):
         self.is_downloading = False
-        self.download_button.config(state="normal", bg="#ef4444", activebackground="#dc2626")
+        self.download_button.config(state="normal", bg="#ef3340", activebackground="#d92734")
         self.stop_button.config(state="disabled", bg="#e5e7eb", fg="#6b7280")
         self.progress_var.set(0)
         self.progress_percent_label.config(text="0%")
@@ -1682,7 +1717,7 @@ class YTToMP3App:
 
     def finish_stopped(self):
         self.is_downloading = False
-        self.download_button.config(state="normal", bg="#ef4444", activebackground="#dc2626")
+        self.download_button.config(state="normal", bg="#ef3340", activebackground="#d92734")
         self.stop_button.config(state="disabled", bg="#e5e7eb", fg="#6b7280")
         self.status_text.set(self.texts["status_stopped"])
         self.eta_text.set(self.texts["eta_waiting"])
