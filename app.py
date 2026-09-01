@@ -14,6 +14,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import urllib.request
 import tempfile
+import locale
 
 from version import APP_VERSION
 
@@ -26,12 +27,12 @@ UPDATE_API_URL = (
     f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest"
 )
 CONFIG_FILE = "config.json"
-WINDOW_SIZE = "860x760"
-MIN_WIDTH = 760
-MIN_HEIGHT = 650
+WINDOW_SIZE = "720x650"
+MIN_WIDTH = 620
+MIN_HEIGHT = 520
 LINKEDIN_URL = "https://www.linkedin.com/in/andrej-marov%C5%A1ek-78b040206/"
 
-CONTENT_MAX_WIDTH = 760
+CONTENT_MAX_WIDTH = 640
 
 
 def make_lang(
@@ -679,6 +680,100 @@ def transliterate_text(text: str) -> str:
     return text
 
 
+
+
+class RoundedCard(tk.Frame):
+    """A lightweight rounded visual container built with a Canvas."""
+    def __init__(
+        self,
+        parent,
+        bg="#ffffff",
+        border="#e4e9f2",
+        radius=14,
+        padding=16,
+        outer_bg="#f5f7fb",
+        **kwargs
+    ):
+        super().__init__(parent, bg=outer_bg, bd=0, highlightthickness=0, **kwargs)
+        self.card_bg = bg
+        self.border = border
+        self.radius = radius
+        self.padding = padding
+
+        self.canvas = tk.Canvas(
+            self,
+            bg=outer_bg,
+            bd=0,
+            highlightthickness=0
+        )
+        self.canvas.pack(fill="both", expand=True)
+
+        self.content = tk.Frame(
+            self.canvas,
+            bg=bg,
+            bd=0,
+            highlightthickness=0
+        )
+        self.window_id = self.canvas.create_window(
+            (padding, padding),
+            window=self.content,
+            anchor="nw"
+        )
+
+        self.canvas.bind("<Configure>", self._redraw)
+        self.content.bind("<Configure>", self._sync_height)
+
+    @staticmethod
+    def _rounded_points(x1, y1, x2, y2, r):
+        return [
+            x1 + r, y1,
+            x2 - r, y1,
+            x2, y1,
+            x2, y1 + r,
+            x2, y2 - r,
+            x2, y2,
+            x2 - r, y2,
+            x1 + r, y2,
+            x1, y2,
+            x1, y2 - r,
+            x1, y1 + r,
+            x1, y1,
+        ]
+
+    def _draw_round_rect(self, x1, y1, x2, y2, radius, **kwargs):
+        points = self._rounded_points(x1, y1, x2, y2, radius)
+        return self.canvas.create_polygon(
+            points,
+            smooth=True,
+            splinesteps=24,
+            **kwargs
+        )
+
+    def _redraw(self, _event=None):
+        width = max(self.canvas.winfo_width(), 10)
+        height = max(self.canvas.winfo_height(), 10)
+        self.canvas.delete("card_shape")
+        self._draw_round_rect(
+            1, 1, width - 1, height - 1,
+            min(self.radius, width // 4, height // 4),
+            fill=self.card_bg,
+            outline=self.border,
+            width=1,
+            tags="card_shape"
+        )
+        self.canvas.tag_lower("card_shape")
+        self.canvas.itemconfigure(
+            self.window_id,
+            width=max(width - (self.padding * 2), 1)
+        )
+
+    def _sync_height(self, _event=None):
+        requested = self.content.winfo_reqheight() + self.padding * 2
+        if requested > 0:
+            self.canvas.configure(height=requested)
+        self._redraw()
+
+
 class ScrollableFrame(tk.Frame):
     def __init__(self, parent, bg):
         super().__init__(parent, bg=bg)
@@ -736,6 +831,35 @@ def version_tuple(version: str):
 
 def is_newer_version(latest: str, current: str) -> bool:
     return version_tuple(latest) > version_tuple(current)
+
+
+
+def decode_process_line(raw_line) -> str:
+    """Decode yt-dlp output without destroying Central-European characters."""
+    if isinstance(raw_line, str):
+        return raw_line
+
+    encodings = [
+        "utf-8",
+        locale.getpreferredencoding(False),
+        "cp1250",
+        "cp1252",
+    ]
+
+    tried = set()
+    for encoding in encodings:
+        if not encoding:
+            continue
+        key = encoding.lower()
+        if key in tried:
+            continue
+        tried.add(key)
+        try:
+            return raw_line.decode(encoding)
+        except (UnicodeDecodeError, LookupError):
+            pass
+
+    return raw_line.decode("utf-8", errors="replace")
 
 class YTToMP3App:
     def __init__(self, root: tk.Tk) -> None:
@@ -813,16 +937,18 @@ class YTToMP3App:
 
             saved_titles = data.get("last_successful_titles", [])
             for title in saved_titles[-5:]:
-                self.last_successful_titles.append(title)
+                # Old builds may have stored replacement characters after a
+                # wrong Windows stdout decode. Skip those irrecoverable entries.
+                if "\ufffd" not in title:
+                    self.last_successful_titles.append(title)
         except Exception:
             pass
 
     def build_ui(self):
-        # Modern 2026-style UI. Existing download/update behaviour is unchanged.
         BG = "#f5f7fb"
         CARD = "#ffffff"
-        BORDER = "#e4e9f2"
-        TEXT = "#111827"
+        BORDER = "#e3e8f0"
+        TEXT = "#101828"
         MUTED = "#667085"
         SUBTLE = "#98a2b3"
         BLUE = "#4f6ef7"
@@ -833,102 +959,139 @@ class YTToMP3App:
 
         self.root.configure(bg=BG)
 
-        shell = tk.Frame(self.root, bg=BG)
-        shell.pack(fill="both", expand=True)
+        # Scrollable content makes the app usable even on a smaller window.
+        self.scrollable = ScrollableFrame(self.root, bg=BG)
+        self.scrollable.pack(fill="both", expand=True)
+        outer = self.scrollable.inner
 
-        # Top bar
-        topbar = tk.Frame(shell, bg=CARD, height=74)
-        topbar.pack(fill="x")
-        topbar.pack_propagate(False)
+        page = tk.Frame(outer, bg=BG)
+        page.pack(fill="x", expand=True, padx=22, pady=18)
 
-        brand = tk.Frame(topbar, bg=CARD)
-        brand.pack(side="left", padx=(28, 0), pady=17)
+        # Header / brand
+        header = tk.Frame(page, bg=BG)
+        header.pack(fill="x", pady=(0, 16))
 
-        logo = tk.Label(
-            brand, text="▶", bg=BLUE, fg="white",
-            font=("Segoe UI", 10, "bold"), width=3, height=1
-        )
-        logo.pack(side="left", padx=(0, 12))
+        brand = tk.Frame(header, bg=BG)
+        brand.pack(side="left")
 
         tk.Label(
-            brand, text="YT to MP3", bg=CARD, fg=TEXT,
-            font=("Segoe UI", 15, "bold")
+            brand,
+            text="▶",
+            bg=BLUE,
+            fg="white",
+            font=("Segoe UI", 9, "bold"),
+            width=3,
+        ).pack(side="left", padx=(0, 10))
+
+        tk.Label(
+            brand,
+            text="YT to MP3",
+            bg=BG,
+            fg=TEXT,
+            font=("Segoe UI", 14, "bold"),
         ).pack(side="left")
 
         self.version_label = tk.Label(
-            brand, text=f"v{APP_VERSION}",
-            bg="#eef2ff", fg=BLUE_DARK,
-            font=("Segoe UI", 8, "bold"), padx=8, pady=4
+            brand,
+            text=f"v{APP_VERSION}",
+            bg="#eef2ff",
+            fg=BLUE_DARK,
+            font=("Segoe UI", 8, "bold"),
+            padx=7,
+            pady=3,
         )
-        self.version_label.pack(side="left", padx=(10, 0))
+        self.version_label.pack(side="left", padx=(9, 0))
 
-        lang_wrap = tk.Frame(topbar, bg=CARD)
-        lang_wrap.pack(side="right", padx=(0, 28), pady=16)
+        language_area = tk.Frame(header, bg=BG)
+        language_area.pack(side="right")
 
         self.language_label = tk.Label(
-            lang_wrap, bg=CARD, fg=MUTED,
-            font=("Segoe UI", 8, "bold")
+            language_area,
+            bg=BG,
+            fg=MUTED,
+            font=("Segoe UI", 8, "bold"),
         )
-        self.language_label.pack(side="left", padx=(0, 8))
+        self.language_label.pack(side="left", padx=(0, 7))
 
         self.language_combo = tk.OptionMenu(
-            lang_wrap, self.language_var, *sorted(LANGUAGES.keys()),
-            command=lambda _=None: self.on_language_change()
+            language_area,
+            self.language_var,
+            *sorted(LANGUAGES.keys()),
+            command=lambda _=None: self.on_language_change(),
         )
         self.language_combo.config(
-            font=("Segoe UI", 9), bg="#fafbfc", fg=TEXT,
-            activebackground="#f2f4f7", activeforeground=TEXT,
-            relief="solid", bd=1, highlightthickness=0,
-            width=14, padx=6, pady=5
+            font=("Segoe UI", 8),
+            bg=CARD,
+            fg=TEXT,
+            activebackground="#f2f4f7",
+            activeforeground=TEXT,
+            relief="solid",
+            bd=1,
+            highlightthickness=0,
+            width=12,
+            padx=4,
+            pady=3,
         )
-        self.language_combo["menu"].config(font=("Segoe UI", 9))
+        self.language_combo["menu"].config(font=("Segoe UI", 8))
         self.language_combo.pack(side="left")
 
-        tk.Frame(shell, bg=BORDER, height=1).pack(fill="x")
-
-        # Main content
-        content = tk.Frame(shell, bg=BG)
-        content.pack(fill="both", expand=True, padx=52, pady=(30, 18))
-
+        # Hero
         self.title_label = tk.Label(
-            content, text="YT to MP3", bg=BG, fg=TEXT,
-            font=("Segoe UI", 30, "bold")
+            page,
+            text="YT to MP3",
+            bg=BG,
+            fg=TEXT,
+            font=("Segoe UI", 25, "bold"),
         )
-        self.title_label.pack()
+        self.title_label.pack(pady=(4, 3))
 
         self.subtitle_label = tk.Label(
-            content, bg=BG, fg=MUTED,
-            font=("Segoe UI", 11), wraplength=700, justify="center"
+            page,
+            bg=BG,
+            fg=MUTED,
+            font=("Segoe UI", 9),
+            wraplength=590,
+            justify="center",
         )
-        self.subtitle_label.pack(pady=(8, 24))
+        self.subtitle_label.pack(pady=(0, 15))
 
-        # Current item card
-        current_card = tk.Frame(
-            content, bg=CARD, bd=0,
-            highlightbackground=BORDER, highlightthickness=1
+        # Current download rounded card
+        current_card = RoundedCard(
+            page,
+            bg=CARD,
+            border=BORDER,
+            radius=14,
+            padding=15,
+            outer_bg=BG,
         )
-        current_card.pack(fill="x", pady=(0, 14))
-
-        current_inner = tk.Frame(current_card, bg=CARD)
-        current_inner.pack(fill="x", padx=22, pady=17)
+        current_card.pack(fill="x", pady=(0, 12))
+        current = current_card.content
 
         self.current_item_caption = tk.Label(
-            current_inner, bg=CARD, fg=MUTED,
-            font=("Segoe UI", 8, "bold"), anchor="w"
+            current,
+            bg=CARD,
+            fg=MUTED,
+            font=("Segoe UI", 8, "bold"),
+            anchor="w",
         )
         self.current_item_caption.pack(fill="x")
 
         self.current_item_value = tk.Label(
-            current_inner, textvariable=self.current_title_text,
-            bg=CARD, fg=TEXT, font=("Segoe UI", 12, "bold"),
-            anchor="w", justify="left", wraplength=690
+            current,
+            textvariable=self.current_title_text,
+            bg=CARD,
+            fg=TEXT,
+            font=("Segoe UI", 11, "bold"),
+            anchor="w",
+            justify="left",
+            wraplength=570,
         )
-        self.current_item_value.pack(fill="x", pady=(7, 14))
+        self.current_item_value.pack(fill="x", pady=(5, 11))
 
-        info_row = tk.Frame(current_inner, bg=CARD)
-        info_row.pack(fill="x")
+        info = tk.Frame(current, bg=CARD)
+        info.pack(fill="x")
 
-        left_info = tk.Frame(info_row, bg=CARD)
+        left_info = tk.Frame(info, bg=CARD)
         left_info.pack(side="left")
 
         self.playlist_progress_caption = tk.Label(
@@ -943,7 +1106,7 @@ class YTToMP3App:
         )
         self.playlist_progress_value.pack(side="left", padx=(5, 0))
 
-        right_info = tk.Frame(info_row, bg=CARD)
+        right_info = tk.Frame(info, bg=CARD)
         right_info.pack(side="right")
 
         self.eta_caption = tk.Label(
@@ -958,159 +1121,232 @@ class YTToMP3App:
         )
         self.eta_value.pack(side="left", padx=(5, 0))
 
-        # Existing behaviour: this button reads the YouTube URL from clipboard.
+        # Main red button; behaviour is unchanged (reads clipboard automatically).
         self.download_button = tk.Button(
-            content, text="", command=self.on_download_click,
-            bg=RED, fg="white",
-            activebackground=RED_ACTIVE, activeforeground="white",
+            page,
+            text="",
+            command=self.on_download_click,
+            bg=RED,
+            fg="white",
+            activebackground=RED_ACTIVE,
+            activeforeground="white",
             disabledforeground="white",
-            relief="flat", bd=0,
-            font=("Segoe UI", 12, "bold"),
-            cursor="hand2", padx=16, pady=14
+            relief="flat",
+            bd=0,
+            font=("Segoe UI", 11, "bold"),
+            cursor="hand2",
+            padx=15,
+            pady=12,
         )
-        self.download_button.pack(fill="x", pady=(0, 10))
+        self.download_button.pack(fill="x", pady=(0, 8))
 
-        controls = tk.Frame(content, bg=BG)
-        controls.pack(fill="x", pady=(0, 14))
+        controls = tk.Frame(page, bg=BG)
+        controls.pack(fill="x", pady=(0, 10))
 
         self.playlist_check = tk.Checkbutton(
-            controls, text="", variable=self.allow_playlist_var,
-            bg=BG, fg=TEXT, activebackground=BG, activeforeground=TEXT,
-            font=("Segoe UI", 9), selectcolor=BG,
-            bd=0, highlightthickness=0
+            controls,
+            text="",
+            variable=self.allow_playlist_var,
+            bg=BG,
+            fg=TEXT,
+            activebackground=BG,
+            activeforeground=TEXT,
+            font=("Segoe UI", 8),
+            selectcolor=BG,
+            bd=0,
+            highlightthickness=0,
         )
         self.playlist_check.pack(side="left")
 
         self.stop_button = tk.Button(
-            controls, text="", command=self.stop_download,
-            bg="#eaecf0", fg="#667085",
-            activebackground="#dfe3e8", activeforeground=TEXT,
-            relief="flat", bd=0,
-            font=("Segoe UI", 9, "bold"),
-            cursor="hand2", padx=14, pady=7,
-            state="disabled"
+            controls,
+            text="",
+            command=self.stop_download,
+            bg="#eaecf0",
+            fg=MUTED,
+            activebackground="#dfe3e8",
+            activeforeground=TEXT,
+            relief="flat",
+            bd=0,
+            font=("Segoe UI", 8, "bold"),
+            cursor="hand2",
+            padx=12,
+            pady=6,
+            state="disabled",
         )
         self.stop_button.pack(side="right")
 
-        # Progress
-        progress_header = tk.Frame(content, bg=BG)
-        progress_header.pack(fill="x", pady=(0, 6))
+        # Status + progress
+        progress_header = tk.Frame(page, bg=BG)
+        progress_header.pack(fill="x", pady=(0, 4))
 
         self.status_label = tk.Label(
-            progress_header, textvariable=self.status_text,
-            bg=BG, fg=BLUE_DARK,
-            font=("Segoe UI", 9, "bold"), anchor="w"
+            progress_header,
+            textvariable=self.status_text,
+            bg=BG,
+            fg=BLUE_DARK,
+            font=("Segoe UI", 8, "bold"),
+            anchor="w",
         )
         self.status_label.pack(side="left")
 
         self.progress_percent_label = tk.Label(
-            progress_header, text="0%",
-            bg=BG, fg=MUTED, font=("Segoe UI", 9, "bold")
+            progress_header,
+            text="0%",
+            bg=BG,
+            fg=MUTED,
+            font=("Segoe UI", 8, "bold"),
         )
         self.progress_percent_label.pack(side="right")
 
-        progress_outer = tk.Frame(content, bg="#e9edf5", height=8)
-        progress_outer.pack(fill="x", pady=(0, 20))
+        progress_outer = tk.Frame(page, bg="#e7ebf2", height=7)
+        progress_outer.pack(fill="x", pady=(0, 14))
         progress_outer.pack_propagate(False)
 
         self.progress_fill = tk.Frame(progress_outer, bg=BLUE, width=0)
         self.progress_fill.place(x=0, y=0, relheight=1)
 
-        # Recent downloads title + open folder
-        section_head = tk.Frame(content, bg=BG)
-        section_head.pack(fill="x", pady=(0, 10))
-
-        self.log_title_label = tk.Label(
-            section_head, bg=BG, fg=TEXT,
-            font=("Segoe UI", 13, "bold"), anchor="w"
+        # Folder rounded card
+        folder_card = RoundedCard(
+            page,
+            bg=CARD,
+            border=BORDER,
+            radius=13,
+            padding=14,
+            outer_bg=BG,
         )
-        self.log_title_label.pack(side="left")
+        folder_card.pack(fill="x", pady=(0, 12))
+        folder = folder_card.content
+
+        folder_top = tk.Frame(folder, bg=CARD)
+        folder_top.pack(fill="x", pady=(0, 7))
+
+        self.folder_title_label = tk.Label(
+            folder_top,
+            bg=CARD,
+            fg=TEXT,
+            font=("Segoe UI", 9, "bold"),
+            anchor="w",
+        )
+        self.folder_title_label.pack(side="left")
 
         self.open_button = tk.Button(
-            section_head, text="", command=self.open_folder,
-            bg=CARD, fg=TEXT,
-            activebackground="#f2f4f7", activeforeground=TEXT,
-            relief="solid", bd=1,
-            font=("Segoe UI", 9, "bold"),
-            cursor="hand2", padx=12, pady=6
+            folder_top,
+            text="",
+            command=self.open_folder,
+            bg="#f7f8fa",
+            fg=TEXT,
+            activebackground="#eef1f5",
+            activeforeground=TEXT,
+            relief="flat",
+            bd=0,
+            font=("Segoe UI", 8, "bold"),
+            cursor="hand2",
+            padx=10,
+            pady=5,
         )
         self.open_button.pack(side="right")
 
-        # Folder
-        folder_card = tk.Frame(
-            content, bg=CARD, bd=0,
-            highlightbackground=BORDER, highlightthickness=1
-        )
-        folder_card.pack(fill="x", pady=(0, 10))
-
-        folder_inner = tk.Frame(folder_card, bg=CARD)
-        folder_inner.pack(fill="x", padx=18, pady=11)
-
-        self.folder_title_label = tk.Label(
-            folder_inner, bg=CARD, fg=MUTED,
-            font=("Segoe UI", 8, "bold")
-        )
-        self.folder_title_label.pack(side="left", padx=(0, 10))
+        folder_row = tk.Frame(folder, bg=CARD)
+        folder_row.pack(fill="x")
 
         self.folder_entry = tk.Entry(
-            folder_inner, textvariable=self.download_folder,
-            font=("Segoe UI", 9), relief="flat", bd=0,
-            bg=CARD, fg=TEXT, insertbackground=TEXT
+            folder_row,
+            textvariable=self.download_folder,
+            font=("Segoe UI", 8),
+            relief="flat",
+            bd=0,
+            bg="#f8fafc",
+            fg=TEXT,
+            insertbackground=TEXT,
         )
-        self.folder_entry.pack(side="left", fill="x", expand=True, ipady=4)
+        self.folder_entry.pack(side="left", fill="x", expand=True, ipady=7)
 
         self.browse_button = tk.Button(
-            folder_inner, text="", command=self.choose_folder,
-            bg="#f2f4f7", fg=TEXT,
-            activebackground="#e8ebef", activeforeground=TEXT,
-            relief="flat", bd=0,
+            folder_row,
+            text="",
+            command=self.choose_folder,
+            bg="#eef1f5",
+            fg=TEXT,
+            activebackground="#e3e7ed",
+            activeforeground=TEXT,
+            relief="flat",
+            bd=0,
             font=("Segoe UI", 8, "bold"),
-            cursor="hand2", padx=11, pady=6
+            cursor="hand2",
+            padx=10,
+            pady=6,
         )
-        self.browse_button.pack(side="right", padx=(10, 0))
+        self.browse_button.pack(side="left", padx=(7, 0))
 
-        # Last five downloads — same data as before, modern card layout.
+        # Recent downloads
+        self.log_title_label = tk.Label(
+            page,
+            bg=BG,
+            fg=TEXT,
+            font=("Segoe UI", 11, "bold"),
+            anchor="w",
+        )
+        self.log_title_label.pack(fill="x", pady=(0, 7))
+
         self.log_labels = []
         for _ in range(5):
-            row = tk.Frame(
-                content, bg=CARD, bd=0,
-                highlightbackground=BORDER, highlightthickness=1
+            row_card = RoundedCard(
+                page,
+                bg=CARD,
+                border=BORDER,
+                radius=11,
+                padding=9,
+                outer_bg=BG,
             )
-            row.pack(fill="x", pady=(0, 7))
+            row_card.pack(fill="x", pady=(0, 6))
+            row = row_card.content
 
             tk.Label(
-                row, text="✓", bg=CARD, fg=GREEN,
-                font=("Segoe UI", 12, "bold"), width=3
-            ).pack(side="left", padx=(8, 2), pady=10)
+                row,
+                text="✓",
+                bg=CARD,
+                fg=GREEN,
+                font=("Segoe UI", 11, "bold"),
+                width=2,
+            ).pack(side="left", padx=(0, 5))
 
             lbl = tk.Label(
-                row, bg=CARD, fg="#344054",
-                font=("Segoe UI", 9),
-                anchor="w", justify="left",
-                wraplength=620, padx=6, pady=10
+                row,
+                bg=CARD,
+                fg="#344054",
+                font=("Segoe UI", 8),
+                anchor="w",
+                justify="left",
+                wraplength=535,
+                pady=3,
             )
             lbl.pack(side="left", fill="x", expand=True)
             self.log_labels.append(lbl)
 
         # Footer
-        footer = tk.Frame(shell, bg=CARD, height=56)
-        footer.pack(fill="x", side="bottom")
-        footer.pack_propagate(False)
-
-        tk.Frame(footer, bg=BORDER, height=1).pack(fill="x")
+        footer = tk.Frame(page, bg=BG)
+        footer.pack(fill="x", pady=(8, 0))
 
         self.tip_label = tk.Label(
-            footer, bg=CARD, fg=SUBTLE,
-            font=("Segoe UI", 8),
-            wraplength=500, justify="left", anchor="w"
+            footer,
+            bg=BG,
+            fg=SUBTLE,
+            font=("Segoe UI", 7),
+            wraplength=420,
+            justify="left",
+            anchor="w",
         )
-        self.tip_label.pack(side="left", padx=(28, 0), pady=17)
+        self.tip_label.pack(side="left", fill="x", expand=True)
 
         self.credit_label = tk.Label(
-            footer, bg=CARD, fg=MUTED,
-            font=("Segoe UI", 8), cursor="hand2"
+            footer,
+            bg=BG,
+            fg=MUTED,
+            font=("Segoe UI", 7),
+            cursor="hand2",
         )
-        self.credit_label.pack(side="right", padx=(0, 28), pady=17)
+        self.credit_label.pack(side="right")
         self.credit_label.bind(
             "<Button-1>", lambda e: webbrowser.open(LINKEDIN_URL)
         )
@@ -1613,9 +1849,7 @@ class YTToMP3App:
                 command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
+                text=False,
                 creationflags=creationflags,
             )
 
@@ -1623,7 +1857,7 @@ class YTToMP3App:
 
             if self.current_process.stdout is not None:
                 for raw_line in self.current_process.stdout:
-                    line = raw_line.strip()
+                    line = decode_process_line(raw_line).strip()
                     if not line:
                         continue
 
