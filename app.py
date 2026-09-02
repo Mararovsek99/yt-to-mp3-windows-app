@@ -1339,14 +1339,34 @@ class YTToMP3App:
         )
         self.tip_label.pack(side="left", fill="x", expand=True)
 
+        footer_right = tk.Frame(footer, bg=BG)
+        footer_right.pack(side="right")
+
+        self.check_updates_button = tk.Button(
+            footer_right,
+            text="Preveri posodobitve",
+            command=self.manual_update_check,
+            bg="#eef2ff",
+            fg=BLUE_DARK,
+            activebackground="#e0e7ff",
+            activeforeground=BLUE_DARK,
+            relief="flat",
+            bd=0,
+            font=("Segoe UI", 7, "bold"),
+            cursor="hand2",
+            padx=9,
+            pady=4,
+        )
+        self.check_updates_button.pack(side="left", padx=(0, 10))
+
         self.credit_label = tk.Label(
-            footer,
+            footer_right,
             bg=BG,
             fg=MUTED,
             font=("Segoe UI", 7),
             cursor="hand2",
         )
-        self.credit_label.pack(side="right")
+        self.credit_label.pack(side="left")
         self.credit_label.bind(
             "<Button-1>", lambda e: webbrowser.open(LINKEDIN_URL)
         )
@@ -1383,6 +1403,25 @@ class YTToMP3App:
         self.open_button.config(text=self.texts["open_button"])
         self.tip_label.config(text=self.texts["tip"])
         self.credit_label.config(text=self.texts["credit"])
+        update_button_texts = {
+            "Slovenian": "Preveri posodobitve",
+            "English": "Check for updates",
+            "German": "Nach Updates suchen",
+            "French": "Vérifier les mises à jour",
+            "Italian": "Controlla aggiornamenti",
+            "Spanish": "Buscar actualizaciones",
+            "Portuguese": "Verificar atualizações",
+            "Dutch": "Controleren op updates",
+            "Croatian": "Provjeri ažuriranja",
+            "Serbian": "Provjeri ažuriranja",
+            "Bosnian": "Provjeri ažuriranja",
+        }
+        self.check_updates_button.config(
+            text=update_button_texts.get(
+                self.current_language,
+                "Check for updates"
+            )
+        )
         self.current_item_caption.config(text=self.texts["current_item_label"])
         self.playlist_progress_caption.config(text=self.texts["playlist_progress_label"])
         self.eta_caption.config(text=self.texts["eta_label"])
@@ -1420,12 +1459,23 @@ class YTToMP3App:
     def start_update_check(self):
         thread = threading.Thread(
             target=self.check_for_updates,
+            kwargs={"manual": False},
             daemon=True
         )
         thread.start()
-    
-    
-    def check_for_updates(self):
+
+    def manual_update_check(self):
+        self.check_updates_button.config(state="disabled")
+        self.status_text.set("Preverjam posodobitve ...")
+
+        thread = threading.Thread(
+            target=self.check_for_updates,
+            kwargs={"manual": True},
+            daemon=True
+        )
+        thread.start()
+
+    def check_for_updates(self, manual=False):
         try:
             request = urllib.request.Request(
                 UPDATE_API_URL,
@@ -1434,41 +1484,94 @@ class YTToMP3App:
                     "Accept": "application/vnd.github+json",
                 },
             )
-    
-            with urllib.request.urlopen(request, timeout=8) as response:
+
+            with urllib.request.urlopen(request, timeout=12) as response:
                 data = json.loads(response.read().decode("utf-8"))
-    
+
             latest_version = data.get("tag_name", "").lstrip("v")
-    
+
             if not latest_version:
+                if manual:
+                    self.root.after(
+                        0,
+                        lambda: self._finish_manual_update_check(
+                            "Ni bilo mogoče določiti najnovejše različice.",
+                            error=True
+                        )
+                    )
                 return
-    
+
             if not is_newer_version(latest_version, APP_VERSION):
+                if manual:
+                    self.root.after(
+                        0,
+                        lambda v=latest_version: self._show_up_to_date(v)
+                    )
                 return
-    
+
             installer_url = None
-    
             for asset in data.get("assets", []):
                 if asset.get("name") == INSTALLER_ASSET_NAME:
                     installer_url = asset.get("browser_download_url")
                     break
-    
+
             if not installer_url:
+                if manual:
+                    self.root.after(
+                        0,
+                        lambda: self._finish_manual_update_check(
+                            "Nova različica obstaja, vendar installer ni na voljo.",
+                            error=True
+                        )
+                    )
                 return
-    
+
             self.root.after(
                 0,
-                lambda: self.show_update_available(
+                lambda: self._show_found_update(
                     latest_version,
-                    installer_url
+                    installer_url,
+                    manual
                 )
             )
-    
-        except Exception:
-            # Update checker nikoli ne sme motiti normalnega delovanja aplikacije.
-            pass
-    
-    
+
+        except Exception as exc:
+            if manual:
+                error_message = f"{type(exc).__name__}: {exc}"
+                self.root.after(
+                    0,
+                    lambda msg=error_message: self._finish_manual_update_check(
+                        f"Preverjanje posodobitev ni uspelo.\n\n{msg}",
+                        error=True
+                    )
+                )
+            # Automatic check remains silent on network/API errors.
+
+    def _show_found_update(self, latest_version, installer_url, manual):
+        if manual:
+            self.check_updates_button.config(state="normal")
+        self.show_update_available(latest_version, installer_url)
+
+    def _show_up_to_date(self, latest_version):
+        self.check_updates_button.config(state="normal")
+        self.status_text.set(self.texts["status_ready"])
+        messagebox.showinfo(
+            APP_TITLE,
+            (
+                "Aplikacija je posodobljena.\n\n"
+                f"Trenutna različica: {APP_VERSION}\n"
+                f"Najnovejša različica: {latest_version}"
+            )
+        )
+
+    def _finish_manual_update_check(self, message, error=False):
+        self.check_updates_button.config(state="normal")
+        self.status_text.set(self.texts["status_ready"])
+        if error:
+            messagebox.showerror(APP_TITLE, message)
+        else:
+            messagebox.showinfo(APP_TITLE, message)
+
     def show_update_available(self, latest_version, installer_url):
         answer = messagebox.askyesno(
             APP_TITLE,
