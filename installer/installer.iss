@@ -1,5 +1,7 @@
 #define MyAppName "YT to MP3"
-#define MyAppVersion "1.0.0"
+#ifndef MyAppVersion
+  #define MyAppVersion "1.0.0"
+#endif
 #define MyAppPublisher "Andrej Marovšek"
 #define MyAppExeName "YoutubeToMp3.exe"
 
@@ -24,7 +26,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 
 UninstallDisplayName=YT to MP3
-UninstallDisplayIcon={app}\YoutubeToMp3.exe
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 WizardStyle=modern
 
@@ -32,11 +34,11 @@ WizardStyle=modern
 Source: "..\dist\YoutubeToMp3\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\YT to MP3"; Filename: "{app}\YoutubeToMp3.exe"
-Name: "{autodesktop}\YT to MP3"; Filename: "{app}\YoutubeToMp3.exe"; Tasks: desktopicon
+Name: "{group}\YT to MP3"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\YT to MP3"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"; Flags: unchecked
 
 [Run]
-Filename: "{app}\YoutubeToMp3.exe"; Description: "Launch YT to MP3"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Launch YT to MP3"; Flags: nowait postinstall skipifsilent
