@@ -603,7 +603,616 @@ LANGUAGES = {
         "-", "qed nikkalkula ...",
     ),
 }
-
+EXTRA_TEXTS = {
+    'Slovenian': {
+        'check_updates': 'Preveri posodobitve',
+        'checking_updates': 'Preverjam posodobitve ...',
+        'latest_unknown': 'Ni bilo mogoče določiti najnovejše različice.',
+        'installer_unavailable': 'Nova različica obstaja, vendar namestitveni program ni na voljo.',
+        'update_check_failed': 'Preverjanje posodobitev ni uspelo.',
+        'up_to_date': 'Aplikacija je posodobljena.',
+        'current_version': 'Trenutna različica:',
+        'latest_version': 'Najnovejša različica:',
+        'update_available': 'Na voljo je nova različica YT to MP3.',
+        'new_version': 'Nova različica:',
+        'update_now': 'Želiš posodobiti zdaj?',
+        'downloading_update': 'Prenašam posodobitev {version} ...',
+        'update_download_failed': 'Posodobitve ni bilo mogoče prenesti.',
+        'update_ready': 'Posodobitev {version} je pripravljena.',
+        'app_will_close': 'Aplikacija se bo zaprla in odprl se bo namestitveni program.',
+        'continue_update': 'Nadaljujem?',
+        'update_launch_failed': 'Posodobitve ni bilo mogoče zagnati.',
+    },
+    'English': {
+        'check_updates': 'Check for updates',
+        'checking_updates': 'Checking for updates ...',
+        'latest_unknown': 'Could not determine the latest version.',
+        'installer_unavailable': 'A new version exists, but the installer is not available.',
+        'update_check_failed': 'Update check failed.',
+        'up_to_date': 'The application is up to date.',
+        'current_version': 'Current version:',
+        'latest_version': 'Latest version:',
+        'update_available': 'A new version of YT to MP3 is available.',
+        'new_version': 'New version:',
+        'update_now': 'Would you like to update now?',
+        'downloading_update': 'Downloading update {version} ...',
+        'update_download_failed': 'The update could not be downloaded.',
+        'update_ready': 'Update {version} is ready.',
+        'app_will_close': 'The application will close and the installer will open.',
+        'continue_update': 'Continue?',
+        'update_launch_failed': 'The update could not be started.',
+    },
+    'German': {
+        'check_updates': 'Nach Updates suchen',
+        'checking_updates': 'Suche nach Updates ...',
+        'latest_unknown': 'Die neueste Version konnte nicht ermittelt werden.',
+        'installer_unavailable': 'Eine neue Version ist verfügbar, aber der Installer fehlt.',
+        'update_check_failed': 'Die Update-Prüfung ist fehlgeschlagen.',
+        'up_to_date': 'Die Anwendung ist aktuell.',
+        'current_version': 'Aktuelle Version:',
+        'latest_version': 'Neueste Version:',
+        'update_available': 'Eine neue Version von YT to MP3 ist verfügbar.',
+        'new_version': 'Neue Version:',
+        'update_now': 'Jetzt aktualisieren?',
+        'downloading_update': 'Update {version} wird heruntergeladen ...',
+        'update_download_failed': 'Das Update konnte nicht heruntergeladen werden.',
+        'update_ready': 'Update {version} ist bereit.',
+        'app_will_close': 'Die Anwendung wird geschlossen und das Installationsprogramm geöffnet.',
+        'continue_update': 'Fortfahren?',
+        'update_launch_failed': 'Das Update konnte nicht gestartet werden.',
+    },
+    'French': {
+        'check_updates': 'Vérifier les mises à jour',
+        'checking_updates': 'Recherche de mises à jour ...',
+        'latest_unknown': 'Impossible de déterminer la dernière version.',
+        'installer_unavailable': 'Une nouvelle version existe, mais l’installateur n’est pas disponible.',
+        'update_check_failed': 'La recherche de mises à jour a échoué.',
+        'up_to_date': 'L’application est à jour.',
+        'current_version': 'Version actuelle :',
+        'latest_version': 'Dernière version :',
+        'update_available': 'Une nouvelle version de YT to MP3 est disponible.',
+        'new_version': 'Nouvelle version :',
+        'update_now': 'Mettre à jour maintenant ?',
+        'downloading_update': 'Téléchargement de la mise à jour {version} ...',
+        'update_download_failed': 'Impossible de télécharger la mise à jour.',
+        'update_ready': 'La mise à jour {version} est prête.',
+        'app_will_close': 'L’application va se fermer et le programme d’installation va s’ouvrir.',
+        'continue_update': 'Continuer ?',
+        'update_launch_failed': 'Impossible de lancer la mise à jour.',
+    },
+    'Italian': {
+        'check_updates': 'Controlla aggiornamenti',
+        'checking_updates': 'Controllo aggiornamenti ...',
+        'latest_unknown': 'Impossibile determinare la versione più recente.',
+        'installer_unavailable': 'Esiste una nuova versione, ma il programma di installazione non è disponibile.',
+        'update_check_failed': 'Controllo aggiornamenti non riuscito.',
+        'up_to_date': "L'applicazione è aggiornata.",
+        'current_version': 'Versione attuale:',
+        'latest_version': 'Versione più recente:',
+        'update_available': 'È disponibile una nuova versione di YT to MP3.',
+        'new_version': 'Nuova versione:',
+        'update_now': 'Vuoi aggiornare ora?',
+        'downloading_update': 'Download aggiornamento {version} ...',
+        'update_download_failed': "Impossibile scaricare l'aggiornamento.",
+        'update_ready': "L'aggiornamento {version} è pronto.",
+        'app_will_close': "L'applicazione verrà chiusa e si aprirà il programma di installazione.",
+        'continue_update': 'Continuare?',
+        'update_launch_failed': "Impossibile avviare l'aggiornamento.",
+    },
+    'Spanish': {
+        'check_updates': 'Buscar actualizaciones',
+        'checking_updates': 'Buscando actualizaciones ...',
+        'latest_unknown': 'No se pudo determinar la versión más reciente.',
+        'installer_unavailable': 'Hay una nueva versión, pero el instalador no está disponible.',
+        'update_check_failed': 'Falló la búsqueda de actualizaciones.',
+        'up_to_date': 'La aplicación está actualizada.',
+        'current_version': 'Versión actual:',
+        'latest_version': 'Última versión:',
+        'update_available': 'Hay una nueva versión de YT to MP3 disponible.',
+        'new_version': 'Nueva versión:',
+        'update_now': '¿Quieres actualizar ahora?',
+        'downloading_update': 'Descargando actualización {version} ...',
+        'update_download_failed': 'No se pudo descargar la actualización.',
+        'update_ready': 'La actualización {version} está lista.',
+        'app_will_close': 'La aplicación se cerrará y se abrirá el instalador.',
+        'continue_update': '¿Continuar?',
+        'update_launch_failed': 'No se pudo iniciar la actualización.',
+    },
+    'Portuguese': {
+        'check_updates': 'Verificar atualizações',
+        'checking_updates': 'Verificando atualizações ...',
+        'latest_unknown': 'Não foi possível determinar a versão mais recente.',
+        'installer_unavailable': 'Existe uma nova versão, mas o instalador não está disponível.',
+        'update_check_failed': 'Falha ao verificar atualizações.',
+        'up_to_date': 'O aplicativo está atualizado.',
+        'current_version': 'Versão atual:',
+        'latest_version': 'Versão mais recente:',
+        'update_available': 'Uma nova versão do YT to MP3 está disponível.',
+        'new_version': 'Nova versão:',
+        'update_now': 'Deseja atualizar agora?',
+        'downloading_update': 'Baixando atualização {version} ...',
+        'update_download_failed': 'Não foi possível baixar a atualização.',
+        'update_ready': 'A atualização {version} está pronta.',
+        'app_will_close': 'O aplicativo será fechado e o instalador será aberto.',
+        'continue_update': 'Continuar?',
+        'update_launch_failed': 'Não foi possível iniciar a atualização.',
+    },
+    'Dutch': {
+        'check_updates': 'Controleren op updates',
+        'checking_updates': 'Controleren op updates ...',
+        'latest_unknown': 'De nieuwste versie kon niet worden bepaald.',
+        'installer_unavailable': 'Er is een nieuwe versie, maar het installatieprogramma is niet beschikbaar.',
+        'update_check_failed': 'Controleren op updates is mislukt.',
+        'up_to_date': 'De toepassing is up-to-date.',
+        'current_version': 'Huidige versie:',
+        'latest_version': 'Nieuwste versie:',
+        'update_available': 'Er is een nieuwe versie van YT to MP3 beschikbaar.',
+        'new_version': 'Nieuwe versie:',
+        'update_now': 'Nu bijwerken?',
+        'downloading_update': 'Update {version} downloaden ...',
+        'update_download_failed': 'De update kon niet worden gedownload.',
+        'update_ready': 'Update {version} is gereed.',
+        'app_will_close': 'De toepassing wordt gesloten en het installatieprogramma wordt geopend.',
+        'continue_update': 'Doorgaan?',
+        'update_launch_failed': 'De update kon niet worden gestart.',
+    },
+    'Croatian': {
+        'check_updates': 'Provjeri ažuriranja',
+        'checking_updates': 'Provjeravam ažuriranja ...',
+        'latest_unknown': 'Nije moguće odrediti najnoviju verziju.',
+        'installer_unavailable': 'Postoji nova verzija, ali instalacijski program nije dostupan.',
+        'update_check_failed': 'Provjera ažuriranja nije uspjela.',
+        'up_to_date': 'Aplikacija je ažurirana.',
+        'current_version': 'Trenutna verzija:',
+        'latest_version': 'Najnovija verzija:',
+        'update_available': 'Dostupna je nova verzija YT to MP3.',
+        'new_version': 'Nova verzija:',
+        'update_now': 'Želite li ažurirati sada?',
+        'downloading_update': 'Preuzimam ažuriranje {version} ...',
+        'update_download_failed': 'Ažuriranje nije moguće preuzeti.',
+        'update_ready': 'Ažuriranje {version} je spremno.',
+        'app_will_close': 'Aplikacija će se zatvoriti i otvorit će se instalacijski program.',
+        'continue_update': 'Nastaviti?',
+        'update_launch_failed': 'Ažuriranje nije moguće pokrenuti.',
+    },
+    'Serbian': {
+        'check_updates': 'Proveri ažuriranja',
+        'checking_updates': 'Proveravam ažuriranja ...',
+        'latest_unknown': 'Nije moguće odrediti najnoviju verziju.',
+        'installer_unavailable': 'Postoji nova verzija, ali instalacioni program nije dostupan.',
+        'update_check_failed': 'Provera ažuriranja nije uspela.',
+        'up_to_date': 'Aplikacija je ažurirana.',
+        'current_version': 'Trenutna verzija:',
+        'latest_version': 'Najnovija verzija:',
+        'update_available': 'Dostupna je nova verzija YT to MP3.',
+        'new_version': 'Nova verzija:',
+        'update_now': 'Želite li da ažurirate sada?',
+        'downloading_update': 'Preuzimam ažuriranje {version} ...',
+        'update_download_failed': 'Ažuriranje nije moguće preuzeti.',
+        'update_ready': 'Ažuriranje {version} je spremno.',
+        'app_will_close': 'Aplikacija će se zatvoriti i otvoriće se instalacioni program.',
+        'continue_update': 'Nastaviti?',
+        'update_launch_failed': 'Ažuriranje nije moguće pokrenuti.',
+    },
+    'Bosnian': {
+        'check_updates': 'Provjeri ažuriranja',
+        'checking_updates': 'Provjeravam ažuriranja ...',
+        'latest_unknown': 'Nije moguće odrediti najnoviju verziju.',
+        'installer_unavailable': 'Postoji nova verzija, ali instalacijski program nije dostupan.',
+        'update_check_failed': 'Provjera ažuriranja nije uspjela.',
+        'up_to_date': 'Aplikacija je ažurirana.',
+        'current_version': 'Trenutna verzija:',
+        'latest_version': 'Najnovija verzija:',
+        'update_available': 'Dostupna je nova verzija YT to MP3.',
+        'new_version': 'Nova verzija:',
+        'update_now': 'Želite li ažurirati sada?',
+        'downloading_update': 'Preuzimam ažuriranje {version} ...',
+        'update_download_failed': 'Ažuriranje nije moguće preuzeti.',
+        'update_ready': 'Ažuriranje {version} je spremno.',
+        'app_will_close': 'Aplikacija će se zatvoriti i otvorit će se instalacijski program.',
+        'continue_update': 'Nastaviti?',
+        'update_launch_failed': 'Ažuriranje nije moguće pokrenuti.',
+    },
+    'Czech': {
+        'check_updates': 'Zkontrolovat aktualizace',
+        'checking_updates': 'Kontroluji aktualizace ...',
+        'latest_unknown': 'Nelze zjistit nejnovější verzi.',
+        'installer_unavailable': 'Existuje nová verze, ale instalační program není dostupný.',
+        'update_check_failed': 'Kontrola aktualizací selhala.',
+        'up_to_date': 'Aplikace je aktuální.',
+        'current_version': 'Aktuální verze:',
+        'latest_version': 'Nejnovější verze:',
+        'update_available': 'Je dostupná nová verze YT to MP3.',
+        'new_version': 'Nová verze:',
+        'update_now': 'Chcete nyní aktualizovat?',
+        'downloading_update': 'Stahuji aktualizaci {version} ...',
+        'update_download_failed': 'Aktualizaci se nepodařilo stáhnout.',
+        'update_ready': 'Aktualizace {version} je připravena.',
+        'app_will_close': 'Aplikace se zavře a spustí se instalační program.',
+        'continue_update': 'Pokračovat?',
+        'update_launch_failed': 'Aktualizaci se nepodařilo spustit.',
+    },
+    'Slovak': {
+        'check_updates': 'Skontrolovať aktualizácie',
+        'checking_updates': 'Kontrolujem aktualizácie ...',
+        'latest_unknown': 'Nepodarilo sa zistiť najnovšiu verziu.',
+        'installer_unavailable': 'Existuje nová verzia, ale inštalátor nie je dostupný.',
+        'update_check_failed': 'Kontrola aktualizácií zlyhala.',
+        'up_to_date': 'Aplikácia je aktuálna.',
+        'current_version': 'Aktuálna verzia:',
+        'latest_version': 'Najnovšia verzia:',
+        'update_available': 'Je dostupná nová verzia YT to MP3.',
+        'new_version': 'Nová verzia:',
+        'update_now': 'Chcete aktualizovať teraz?',
+        'downloading_update': 'Sťahujem aktualizáciu {version} ...',
+        'update_download_failed': 'Aktualizáciu sa nepodarilo stiahnuť.',
+        'update_ready': 'Aktualizácia {version} je pripravená.',
+        'app_will_close': 'Aplikácia sa zavrie a otvorí sa inštalátor.',
+        'continue_update': 'Pokračovať?',
+        'update_launch_failed': 'Aktualizáciu sa nepodarilo spustiť.',
+    },
+    'Polish': {
+        'check_updates': 'Sprawdź aktualizacje',
+        'checking_updates': 'Sprawdzanie aktualizacji ...',
+        'latest_unknown': 'Nie udało się ustalić najnowszej wersji.',
+        'installer_unavailable': 'Dostępna jest nowa wersja, ale instalator nie jest dostępny.',
+        'update_check_failed': 'Sprawdzanie aktualizacji nie powiodło się.',
+        'up_to_date': 'Aplikacja jest aktualna.',
+        'current_version': 'Bieżąca wersja:',
+        'latest_version': 'Najnowsza wersja:',
+        'update_available': 'Dostępna jest nowa wersja YT to MP3.',
+        'new_version': 'Nowa wersja:',
+        'update_now': 'Czy zaktualizować teraz?',
+        'downloading_update': 'Pobieranie aktualizacji {version} ...',
+        'update_download_failed': 'Nie udało się pobrać aktualizacji.',
+        'update_ready': 'Aktualizacja {version} jest gotowa.',
+        'app_will_close': 'Aplikacja zostanie zamknięta i uruchomi się instalator.',
+        'continue_update': 'Kontynuować?',
+        'update_launch_failed': 'Nie udało się uruchomić aktualizacji.',
+    },
+    'Romanian': {
+        'check_updates': 'Verifică actualizările',
+        'checking_updates': 'Se verifică actualizările ...',
+        'latest_unknown': 'Nu s-a putut determina cea mai recentă versiune.',
+        'installer_unavailable': 'Există o versiune nouă, dar programul de instalare nu este disponibil.',
+        'update_check_failed': 'Verificarea actualizărilor a eșuat.',
+        'up_to_date': 'Aplicația este actualizată.',
+        'current_version': 'Versiunea curentă:',
+        'latest_version': 'Cea mai recentă versiune:',
+        'update_available': 'Este disponibilă o versiune nouă de YT to MP3.',
+        'new_version': 'Versiune nouă:',
+        'update_now': 'Doriți să actualizați acum?',
+        'downloading_update': 'Se descarcă actualizarea {version} ...',
+        'update_download_failed': 'Actualizarea nu a putut fi descărcată.',
+        'update_ready': 'Actualizarea {version} este pregătită.',
+        'app_will_close': 'Aplicația se va închide și se va deschide programul de instalare.',
+        'continue_update': 'Continuați?',
+        'update_launch_failed': 'Actualizarea nu a putut fi pornită.',
+    },
+    'Hungarian': {
+        'check_updates': 'Frissítések keresése',
+        'checking_updates': 'Frissítések keresése ...',
+        'latest_unknown': 'A legújabb verzió nem határozható meg.',
+        'installer_unavailable': 'Új verzió érhető el, de a telepítő nem elérhető.',
+        'update_check_failed': 'A frissítések keresése sikertelen.',
+        'up_to_date': 'Az alkalmazás naprakész.',
+        'current_version': 'Jelenlegi verzió:',
+        'latest_version': 'Legújabb verzió:',
+        'update_available': 'Elérhető a YT to MP3 új verziója.',
+        'new_version': 'Új verzió:',
+        'update_now': 'Frissít most?',
+        'downloading_update': 'Frissítés letöltése: {version} ...',
+        'update_download_failed': 'A frissítés nem tölthető le.',
+        'update_ready': 'A(z) {version} frissítés kész.',
+        'app_will_close': 'Az alkalmazás bezárul, és elindul a telepítő.',
+        'continue_update': 'Folytatja?',
+        'update_launch_failed': 'A frissítés nem indítható el.',
+    },
+    'Danish': {
+        'check_updates': 'Søg efter opdateringer',
+        'checking_updates': 'Søger efter opdateringer ...',
+        'latest_unknown': 'Den nyeste version kunne ikke bestemmes.',
+        'installer_unavailable': 'Der findes en ny version, men installationsprogrammet er ikke tilgængeligt.',
+        'update_check_failed': 'Søgning efter opdateringer mislykkedes.',
+        'up_to_date': 'Programmet er opdateret.',
+        'current_version': 'Nuværende version:',
+        'latest_version': 'Nyeste version:',
+        'update_available': 'En ny version af YT to MP3 er tilgængelig.',
+        'new_version': 'Ny version:',
+        'update_now': 'Vil du opdatere nu?',
+        'downloading_update': 'Downloader opdatering {version} ...',
+        'update_download_failed': 'Opdateringen kunne ikke downloades.',
+        'update_ready': 'Opdatering {version} er klar.',
+        'app_will_close': 'Programmet lukkes, og installationsprogrammet åbnes.',
+        'continue_update': 'Fortsæt?',
+        'update_launch_failed': 'Opdateringen kunne ikke startes.',
+    },
+    'Swedish': {
+        'check_updates': 'Sök efter uppdateringar',
+        'checking_updates': 'Söker efter uppdateringar ...',
+        'latest_unknown': 'Det gick inte att fastställa den senaste versionen.',
+        'installer_unavailable': 'Det finns en ny version, men installationsprogrammet är inte tillgängligt.',
+        'update_check_failed': 'Sökningen efter uppdateringar misslyckades.',
+        'up_to_date': 'Programmet är uppdaterat.',
+        'current_version': 'Aktuell version:',
+        'latest_version': 'Senaste version:',
+        'update_available': 'En ny version av YT to MP3 är tillgänglig.',
+        'new_version': 'Ny version:',
+        'update_now': 'Vill du uppdatera nu?',
+        'downloading_update': 'Laddar ner uppdatering {version} ...',
+        'update_download_failed': 'Uppdateringen kunde inte laddas ner.',
+        'update_ready': 'Uppdatering {version} är klar.',
+        'app_will_close': 'Programmet stängs och installationsprogrammet öppnas.',
+        'continue_update': 'Fortsätta?',
+        'update_launch_failed': 'Uppdateringen kunde inte startas.',
+    },
+    'Norwegian': {
+        'check_updates': 'Se etter oppdateringer',
+        'checking_updates': 'Ser etter oppdateringer ...',
+        'latest_unknown': 'Kunne ikke finne den nyeste versjonen.',
+        'installer_unavailable': 'Det finnes en ny versjon, men installasjonsprogrammet er ikke tilgjengelig.',
+        'update_check_failed': 'Søk etter oppdateringer mislyktes.',
+        'up_to_date': 'Programmet er oppdatert.',
+        'current_version': 'Gjeldende versjon:',
+        'latest_version': 'Nyeste versjon:',
+        'update_available': 'En ny versjon av YT to MP3 er tilgjengelig.',
+        'new_version': 'Ny versjon:',
+        'update_now': 'Vil du oppdatere nå?',
+        'downloading_update': 'Laster ned oppdatering {version} ...',
+        'update_download_failed': 'Oppdateringen kunne ikke lastes ned.',
+        'update_ready': 'Oppdatering {version} er klar.',
+        'app_will_close': 'Programmet lukkes og installasjonsprogrammet åpnes.',
+        'continue_update': 'Fortsette?',
+        'update_launch_failed': 'Oppdateringen kunne ikke startes.',
+    },
+    'Finnish': {
+        'check_updates': 'Tarkista päivitykset',
+        'checking_updates': 'Tarkistetaan päivityksiä ...',
+        'latest_unknown': 'Uusinta versiota ei voitu määrittää.',
+        'installer_unavailable': 'Uusi versio on saatavilla, mutta asennusohjelmaa ei ole saatavilla.',
+        'update_check_failed': 'Päivitysten tarkistus epäonnistui.',
+        'up_to_date': 'Sovellus on ajan tasalla.',
+        'current_version': 'Nykyinen versio:',
+        'latest_version': 'Uusin versio:',
+        'update_available': 'YT to MP3:n uusi versio on saatavilla.',
+        'new_version': 'Uusi versio:',
+        'update_now': 'Päivitetäänkö nyt?',
+        'downloading_update': 'Ladataan päivitystä {version} ...',
+        'update_download_failed': 'Päivitystä ei voitu ladata.',
+        'update_ready': 'Päivitys {version} on valmis.',
+        'app_will_close': 'Sovellus suljetaan ja asennusohjelma avataan.',
+        'continue_update': 'Jatketaanko?',
+        'update_launch_failed': 'Päivitystä ei voitu käynnistää.',
+    },
+    'Estonian': {
+        'check_updates': 'Kontrolli uuendusi',
+        'checking_updates': 'Uuenduste kontrollimine ...',
+        'latest_unknown': 'Uusimat versiooni ei õnnestunud määrata.',
+        'installer_unavailable': 'Uus versioon on olemas, kuid paigaldaja pole saadaval.',
+        'update_check_failed': 'Uuenduste kontroll ebaõnnestus.',
+        'up_to_date': 'Rakendus on ajakohane.',
+        'current_version': 'Praegune versioon:',
+        'latest_version': 'Uusim versioon:',
+        'update_available': 'Saadaval on YT to MP3 uus versioon.',
+        'new_version': 'Uus versioon:',
+        'update_now': 'Kas uuendada kohe?',
+        'downloading_update': 'Uuenduse {version} allalaadimine ...',
+        'update_download_failed': 'Uuendust ei õnnestunud alla laadida.',
+        'update_ready': 'Uuendus {version} on valmis.',
+        'app_will_close': 'Rakendus suletakse ja paigaldaja avatakse.',
+        'continue_update': 'Jätkata?',
+        'update_launch_failed': 'Uuendust ei õnnestunud käivitada.',
+    },
+    'Latvian': {
+        'check_updates': 'Pārbaudīt atjauninājumus',
+        'checking_updates': 'Pārbauda atjauninājumus ...',
+        'latest_unknown': 'Neizdevās noteikt jaunāko versiju.',
+        'installer_unavailable': 'Ir pieejama jauna versija, bet instalētājs nav pieejams.',
+        'update_check_failed': 'Atjauninājumu pārbaude neizdevās.',
+        'up_to_date': 'Lietotne ir atjaunināta.',
+        'current_version': 'Pašreizējā versija:',
+        'latest_version': 'Jaunākā versija:',
+        'update_available': 'Ir pieejama jauna YT to MP3 versija.',
+        'new_version': 'Jauna versija:',
+        'update_now': 'Vai atjaunināt tagad?',
+        'downloading_update': 'Lejupielādē atjauninājumu {version} ...',
+        'update_download_failed': 'Atjauninājumu neizdevās lejupielādēt.',
+        'update_ready': 'Atjauninājums {version} ir gatavs.',
+        'app_will_close': 'Lietotne tiks aizvērta un tiks atvērts instalētājs.',
+        'continue_update': 'Turpināt?',
+        'update_launch_failed': 'Atjauninājumu neizdevās palaist.',
+    },
+    'Lithuanian': {
+        'check_updates': 'Tikrinti naujinimus',
+        'checking_updates': 'Tikrinami naujinimai ...',
+        'latest_unknown': 'Nepavyko nustatyti naujausios versijos.',
+        'installer_unavailable': 'Yra nauja versija, tačiau diegimo programa nepasiekiama.',
+        'update_check_failed': 'Naujinimų tikrinimas nepavyko.',
+        'up_to_date': 'Programa yra atnaujinta.',
+        'current_version': 'Dabartinė versija:',
+        'latest_version': 'Naujausia versija:',
+        'update_available': 'Yra nauja YT to MP3 versija.',
+        'new_version': 'Nauja versija:',
+        'update_now': 'Ar atnaujinti dabar?',
+        'downloading_update': 'Atsisiunčiamas naujinimas {version} ...',
+        'update_download_failed': 'Naujinimo nepavyko atsisiųsti.',
+        'update_ready': 'Naujinimas {version} paruoštas.',
+        'app_will_close': 'Programa bus uždaryta ir bus paleista diegimo programa.',
+        'continue_update': 'Tęsti?',
+        'update_launch_failed': 'Naujinimo nepavyko paleisti.',
+    },
+    'Greek': {
+        'check_updates': 'Έλεγχος ενημερώσεων',
+        'checking_updates': 'Έλεγχος για ενημερώσεις ...',
+        'latest_unknown': 'Δεν ήταν δυνατός ο προσδιορισμός της τελευταίας έκδοσης.',
+        'installer_unavailable': 'Υπάρχει νέα έκδοση, αλλά το πρόγραμμα εγκατάστασης δεν είναι διαθέσιμο.',
+        'update_check_failed': 'Ο έλεγχος ενημερώσεων απέτυχε.',
+        'up_to_date': 'Η εφαρμογή είναι ενημερωμένη.',
+        'current_version': 'Τρέχουσα έκδοση:',
+        'latest_version': 'Τελευταία έκδοση:',
+        'update_available': 'Μια νέα έκδοση του YT to MP3 είναι διαθέσιμη.',
+        'new_version': 'Νέα έκδοση:',
+        'update_now': 'Θέλετε να ενημερώσετε τώρα;',
+        'downloading_update': 'Λήψη ενημέρωσης {version} ...',
+        'update_download_failed': 'Δεν ήταν δυνατή η λήψη της ενημέρωσης.',
+        'update_ready': 'Η ενημέρωση {version} είναι έτοιμη.',
+        'app_will_close': 'Η εφαρμογή θα κλείσει και θα ανοίξει το πρόγραμμα εγκατάστασης.',
+        'continue_update': 'Συνέχεια;',
+        'update_launch_failed': 'Δεν ήταν δυνατή η εκκίνηση της ενημέρωσης.',
+    },
+    'Bulgarian': {
+        'check_updates': 'Провери за актуализации',
+        'checking_updates': 'Проверка за актуализации ...',
+        'latest_unknown': 'Не може да се определи най-новата версия.',
+        'installer_unavailable': 'Има нова версия, но инсталаторът не е наличен.',
+        'update_check_failed': 'Проверката за актуализации е неуспешна.',
+        'up_to_date': 'Приложението е актуално.',
+        'current_version': 'Текуща версия:',
+        'latest_version': 'Най-нова версия:',
+        'update_available': 'Налична е нова версия на YT to MP3.',
+        'new_version': 'Нова версия:',
+        'update_now': 'Искате ли да актуализирате сега?',
+        'downloading_update': 'Изтегляне на актуализация {version} ...',
+        'update_download_failed': 'Актуализацията не можа да бъде изтеглена.',
+        'update_ready': 'Актуализация {version} е готова.',
+        'app_will_close': 'Приложението ще се затвори и инсталаторът ще се отвори.',
+        'continue_update': 'Продължаване?',
+        'update_launch_failed': 'Актуализацията не можа да бъде стартирана.',
+    },
+    'Ukrainian': {
+        'check_updates': 'Перевірити оновлення',
+        'checking_updates': 'Перевірка оновлень ...',
+        'latest_unknown': 'Не вдалося визначити останню версію.',
+        'installer_unavailable': 'Є нова версія, але інсталятор недоступний.',
+        'update_check_failed': 'Не вдалося перевірити оновлення.',
+        'up_to_date': 'Програма оновлена.',
+        'current_version': 'Поточна версія:',
+        'latest_version': 'Остання версія:',
+        'update_available': 'Доступна нова версія YT to MP3.',
+        'new_version': 'Нова версія:',
+        'update_now': 'Оновити зараз?',
+        'downloading_update': 'Завантаження оновлення {version} ...',
+        'update_download_failed': 'Не вдалося завантажити оновлення.',
+        'update_ready': 'Оновлення {version} готове.',
+        'app_will_close': 'Програма закриється та відкриється інсталятор.',
+        'continue_update': 'Продовжити?',
+        'update_launch_failed': 'Не вдалося запустити оновлення.',
+    },
+    'Turkish': {
+        'check_updates': 'Güncellemeleri kontrol et',
+        'checking_updates': 'Güncellemeler kontrol ediliyor ...',
+        'latest_unknown': 'En son sürüm belirlenemedi.',
+        'installer_unavailable': 'Yeni bir sürüm var, ancak yükleyici kullanılamıyor.',
+        'update_check_failed': 'Güncelleme kontrolü başarısız oldu.',
+        'up_to_date': 'Uygulama güncel.',
+        'current_version': 'Mevcut sürüm:',
+        'latest_version': 'En son sürüm:',
+        'update_available': "YT to MP3'ün yeni bir sürümü mevcut.",
+        'new_version': 'Yeni sürüm:',
+        'update_now': 'Şimdi güncellemek ister misiniz?',
+        'downloading_update': 'Güncelleme {version} indiriliyor ...',
+        'update_download_failed': 'Güncelleme indirilemedi.',
+        'update_ready': 'Güncelleme {version} hazır.',
+        'app_will_close': 'Uygulama kapanacak ve yükleyici açılacak.',
+        'continue_update': 'Devam edilsin mi?',
+        'update_launch_failed': 'Güncelleme başlatılamadı.',
+    },
+    'Albanian': {
+        'check_updates': 'Kontrollo përditësimet',
+        'checking_updates': 'Po kontrollohen përditësimet ...',
+        'latest_unknown': 'Nuk u përcaktua versioni më i fundit.',
+        'installer_unavailable': 'Ka një version të ri, por instaluesi nuk është i disponueshëm.',
+        'update_check_failed': 'Kontrolli i përditësimeve dështoi.',
+        'up_to_date': 'Aplikacioni është i përditësuar.',
+        'current_version': 'Versioni aktual:',
+        'latest_version': 'Versioni më i fundit:',
+        'update_available': 'Një version i ri i YT to MP3 është i disponueshëm.',
+        'new_version': 'Version i ri:',
+        'update_now': 'Dëshiron ta përditësosh tani?',
+        'downloading_update': 'Po shkarkohet përditësimi {version} ...',
+        'update_download_failed': 'Përditësimi nuk mund të shkarkohej.',
+        'update_ready': 'Përditësimi {version} është gati.',
+        'app_will_close': 'Aplikacioni do të mbyllet dhe instaluesi do të hapet.',
+        'continue_update': 'Vazhdo?',
+        'update_launch_failed': 'Përditësimi nuk mund të nisej.',
+    },
+    'Macedonian': {
+        'check_updates': 'Провери ажурирања',
+        'checking_updates': 'Проверка на ажурирања ...',
+        'latest_unknown': 'Не може да се одреди најновата верзија.',
+        'installer_unavailable': 'Има нова верзија, но инсталаторот не е достапен.',
+        'update_check_failed': 'Проверката на ажурирања не успеа.',
+        'up_to_date': 'Апликацијата е ажурирана.',
+        'current_version': 'Тековна верзија:',
+        'latest_version': 'Најнова верзија:',
+        'update_available': 'Достапна е нова верзија на YT to MP3.',
+        'new_version': 'Нова верзија:',
+        'update_now': 'Дали сакате да ажурирате сега?',
+        'downloading_update': 'Се презема ажурирање {version} ...',
+        'update_download_failed': 'Ажурирањето не може да се преземе.',
+        'update_ready': 'Ажурирањето {version} е подготвено.',
+        'app_will_close': 'Апликацијата ќе се затвори и ќе се отвори инсталаторот.',
+        'continue_update': 'Продолжи?',
+        'update_launch_failed': 'Ажурирањето не може да се стартува.',
+    },
+    'Icelandic': {
+        'check_updates': 'Leita að uppfærslum',
+        'checking_updates': 'Leita að uppfærslum ...',
+        'latest_unknown': 'Ekki tókst að ákvarða nýjustu útgáfuna.',
+        'installer_unavailable': 'Ný útgáfa er til, en uppsetningarforritið er ekki tiltækt.',
+        'update_check_failed': 'Leit að uppfærslum mistókst.',
+        'up_to_date': 'Forritið er uppfært.',
+        'current_version': 'Núverandi útgáfa:',
+        'latest_version': 'Nýjasta útgáfa:',
+        'update_available': 'Ný útgáfa af YT to MP3 er tiltæk.',
+        'new_version': 'Ný útgáfa:',
+        'update_now': 'Viltu uppfæra núna?',
+        'downloading_update': 'Sæki uppfærslu {version} ...',
+        'update_download_failed': 'Ekki tókst að sækja uppfærsluna.',
+        'update_ready': 'Uppfærsla {version} er tilbúin.',
+        'app_will_close': 'Forritinu verður lokað og uppsetningarforritið opnað.',
+        'continue_update': 'Halda áfram?',
+        'update_launch_failed': 'Ekki tókst að ræsa uppfærsluna.',
+    },
+    'Irish': {
+        'check_updates': 'Seiceáil nuashonruithe',
+        'checking_updates': 'Ag seiceáil nuashonruithe ...',
+        'latest_unknown': 'Níorbh fhéidir an leagan is déanaí a aimsiú.',
+        'installer_unavailable': 'Tá leagan nua ann, ach níl an suiteálaí ar fáil.',
+        'update_check_failed': 'Theip ar sheiceáil nuashonruithe.',
+        'up_to_date': 'Tá an feidhmchlár cothrom le dáta.',
+        'current_version': 'Leagan reatha:',
+        'latest_version': 'Leagan is déanaí:',
+        'update_available': 'Tá leagan nua de YT to MP3 ar fáil.',
+        'new_version': 'Leagan nua:',
+        'update_now': 'Ar mhaith leat nuashonrú anois?',
+        'downloading_update': 'Nuashonrú {version} á íoslódáil ...',
+        'update_download_failed': 'Níorbh fhéidir an nuashonrú a íoslódáil.',
+        'update_ready': 'Tá nuashonrú {version} réidh.',
+        'app_will_close': 'Dúnfar an feidhmchlár agus osclófar an suiteálaí.',
+        'continue_update': 'Lean ar aghaidh?',
+        'update_launch_failed': 'Níorbh fhéidir an nuashonrú a thosú.',
+    },
+    'Maltese': {
+        'check_updates': 'Iċċekkja aġġornamenti',
+        'checking_updates': 'Qed jiġu ċċekkjati aġġornamenti ...',
+        'latest_unknown': 'Ma setgħetx tiġi determinata l-aħħar verżjoni.',
+        'installer_unavailable': 'Hemm verżjoni ġdida, iżda l-installatur mhux disponibbli.',
+        'update_check_failed': 'Il-verifika tal-aġġornamenti falliet.',
+        'up_to_date': 'L-applikazzjoni hija aġġornata.',
+        'current_version': 'Verżjoni attwali:',
+        'latest_version': 'L-aħħar verżjoni:',
+        'update_available': "Verżjoni ġdida ta' YT to MP3 hija disponibbli.",
+        'new_version': 'Verżjoni ġdida:',
+        'update_now': 'Trid taġġorna issa?',
+        'downloading_update': 'Qed jitniżżel l-aġġornament {version} ...',
+        'update_download_failed': 'L-aġġornament ma setax jitniżżel.',
+        'update_ready': 'L-aġġornament {version} huwa lest.',
+        'app_will_close': 'L-applikazzjoni se tingħalaq u jinfetaħ l-installatur.',
+        'continue_update': 'Tkompli?',
+        'update_launch_failed': 'L-aġġornament ma setax jinbeda.',
+    },
+}
 
 def resource_path(relative_path: str) -> str:
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
@@ -1403,37 +2012,31 @@ class YTToMP3App:
         self.open_button.config(text=self.texts["open_button"])
         self.tip_label.config(text=self.texts["tip"])
         self.credit_label.config(text=self.texts["credit"])
-        update_button_texts = {
-            "Slovenian": "Preveri posodobitve",
-            "English": "Check for updates",
-            "German": "Nach Updates suchen",
-            "French": "Vérifier les mises à jour",
-            "Italian": "Controlla aggiornamenti",
-            "Spanish": "Buscar actualizaciones",
-            "Portuguese": "Verificar atualizações",
-            "Dutch": "Controleren op updates",
-            "Croatian": "Provjeri ažuriranja",
-            "Serbian": "Provjeri ažuriranja",
-            "Bosnian": "Provjeri ažuriranja",
-        }
         self.check_updates_button.config(
-            text=update_button_texts.get(
-                self.current_language,
-                "Check for updates"
-            )
+            text=self.extra_text("check_updates")
         )
         self.current_item_caption.config(text=self.texts["current_item_label"])
         self.playlist_progress_caption.config(text=self.texts["playlist_progress_label"])
         self.eta_caption.config(text=self.texts["eta_label"])
         self.log_title_label.config(text=self.texts["last_downloads_label"])
 
-        if not self.current_title_text.get():
+        # Translate placeholders even if they were already set in another language.
+        unknown_placeholders = {lang["unknown_item"] for lang in LANGUAGES.values()}
+        eta_placeholders = {
+            value
+            for lang in LANGUAGES.values()
+            for value in (lang["eta_waiting"], lang["eta_calculating"])
+        }
+
+        current_value = self.current_title_text.get()
+        if not current_value or current_value in unknown_placeholders:
             self.current_title_text.set(self.texts["unknown_item"])
 
         if not self.playlist_counter_text.get():
             self.playlist_counter_text.set("-")
 
-        if not self.eta_text.get():
+        eta_value = self.eta_text.get()
+        if not eta_value or eta_value in eta_placeholders:
             self.eta_text.set(self.texts["eta_waiting"])
 
         if not self.is_downloading:
@@ -1456,6 +2059,13 @@ class YTToMP3App:
             else:
                 lbl.config(text="", fg="#94a3b8")
 
+    def extra_text(self, key):
+        language_texts = EXTRA_TEXTS.get(
+            self.current_language,
+            EXTRA_TEXTS["English"]
+        )
+        return language_texts.get(key, EXTRA_TEXTS["English"].get(key, key))
+
     def start_update_check(self):
         thread = threading.Thread(
             target=self.check_for_updates,
@@ -1466,7 +2076,7 @@ class YTToMP3App:
 
     def manual_update_check(self):
         self.check_updates_button.config(state="disabled")
-        self.status_text.set("Preverjam posodobitve ...")
+        self.status_text.set(self.extra_text("checking_updates"))
 
         thread = threading.Thread(
             target=self.check_for_updates,
@@ -1495,7 +2105,7 @@ class YTToMP3App:
                     self.root.after(
                         0,
                         lambda: self._finish_manual_update_check(
-                            "Ni bilo mogoče določiti najnovejše različice.",
+                            self.extra_text("latest_unknown"),
                             error=True
                         )
                     )
@@ -1520,7 +2130,7 @@ class YTToMP3App:
                     self.root.after(
                         0,
                         lambda: self._finish_manual_update_check(
-                            "Nova različica obstaja, vendar installer ni na voljo.",
+                            self.extra_text("installer_unavailable"),
                             error=True
                         )
                     )
@@ -1541,7 +2151,7 @@ class YTToMP3App:
                 self.root.after(
                     0,
                     lambda msg=error_message: self._finish_manual_update_check(
-                        f"Preverjanje posodobitev ni uspelo.\n\n{msg}",
+                        f"{self.extra_text('update_check_failed')}\n\n{msg}",
                         error=True
                     )
                 )
@@ -1558,9 +2168,9 @@ class YTToMP3App:
         messagebox.showinfo(
             APP_TITLE,
             (
-                "Aplikacija je posodobljena.\n\n"
-                f"Trenutna različica: {APP_VERSION}\n"
-                f"Najnovejša različica: {latest_version}"
+                f"{self.extra_text('up_to_date')}\n\n"
+                f"{self.extra_text('current_version')} {APP_VERSION}\n"
+                f"{self.extra_text('latest_version')} {latest_version}"
             )
         )
 
@@ -1576,10 +2186,10 @@ class YTToMP3App:
         answer = messagebox.askyesno(
             APP_TITLE,
             (
-                f"Na voljo je nova različica YT to MP3.\n\n"
-                f"Trenutna različica: {APP_VERSION}\n"
-                f"Nova različica: {latest_version}\n\n"
-                f"Želiš posodobiti zdaj?"
+                f"{self.extra_text('update_available')}\n\n"
+                f"{self.extra_text('current_version')} {APP_VERSION}\n"
+                f"{self.extra_text('new_version')} {latest_version}\n\n"
+                f"{self.extra_text('update_now')}"
             ),
         )
     
@@ -1592,7 +2202,7 @@ class YTToMP3App:
     
     def download_application_update(self, latest_version, installer_url):
         self.status_text.set(
-            f"Prenašam posodobitev {latest_version} ..."
+            self.extra_text("downloading_update").format(version=latest_version)
         )
     
         thread = threading.Thread(
@@ -1664,7 +2274,7 @@ class YTToMP3App:
             self.root.after(
                 0,
                 lambda: self.status_text.set(
-                    "Posodobitve ni bilo mogoče prenesti."
+                    self.extra_text("update_download_failed")
                 )
             )
     
@@ -1677,10 +2287,9 @@ class YTToMP3App:
         answer = messagebox.askyesno(
             APP_TITLE,
             (
-                f"Posodobitev {latest_version} je pripravljena.\n\n"
-                f"Aplikacija se bo zaprla in odprl se bo "
-                f"namestitveni program.\n\n"
-                f"Nadaljujem?"
+                f"{self.extra_text('update_ready').format(version=latest_version)}\n\n"
+                f"{self.extra_text('app_will_close')}\n\n"
+                f"{self.extra_text('continue_update')}"
             ),
         )
     
@@ -1708,7 +2317,7 @@ class YTToMP3App:
         except Exception:
             messagebox.showerror(
                 APP_TITLE,
-                "Posodobitve ni bilo mogoče zagnati."
+                self.extra_text("update_launch_failed")
             )
     def choose_folder(self):
         selected = filedialog.askdirectory(
