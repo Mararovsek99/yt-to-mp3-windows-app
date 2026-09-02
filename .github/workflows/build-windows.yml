@@ -3,6 +3,13 @@ name: Build Windows
 on:
   workflow_dispatch:
 
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -139,3 +146,19 @@ jobs:
         with:
           name: YoutubeToMp3-Setup
           path: installer/output/YoutubeToMp3-Setup.exe
+
+      - name: Create GitHub release
+        if: startsWith(github.event.head_commit.message, 'Release version')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "v$env:APP_VERSION"
+          $installer = "installer\output\YoutubeToMp3-Setup.exe"
+
+          Write-Host "Creating release $tag"
+
+          gh release create $tag `
+            "$installer" `
+            --title "YT to MP3 $tag" `
+            --generate-notes
