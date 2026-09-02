@@ -100,6 +100,18 @@ jobs:
             --add-data "bin;bin" `
             app.py
 
+      - name: Read app version
+        shell: pwsh
+        run: |
+          $content = Get-Content version.py -Raw
+          if ($content -match 'APP_VERSION\s*=\s*"([^"]+)"') {
+            $version = $matches[1]
+            echo "APP_VERSION=$version" >> $env:GITHUB_ENV
+            Write-Host "Building version $version"
+          } else {
+            throw "APP_VERSION not found in version.py"
+          }
+
       - name: Install Inno Setup
         shell: powershell
         run: |
@@ -108,7 +120,10 @@ jobs:
       - name: Build installer
         shell: powershell
         run: |
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer\installer.iss"
+          Write-Host "Building installer version $env:APP_VERSION"
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+            "/DMyAppVersion=$env:APP_VERSION" `
+            "installer\installer.iss"
 
       - name: Verify installer
         shell: powershell

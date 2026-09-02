@@ -1,7 +1,9 @@
 #define MyAppName "YT to MP3"
+
 #ifndef MyAppVersion
   #define MyAppVersion "1.0.0"
 #endif
+
 #define MyAppPublisher "Andrej Marovšek"
 #define MyAppExeName "YoutubeToMp3.exe"
 
