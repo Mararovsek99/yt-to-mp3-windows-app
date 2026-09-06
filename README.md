@@ -1,8 +1,13 @@
 # YouTube Downloader
 
-A simple and modern Windows app for downloading YouTube audio as MP3.
+The fastest way to Download music from yt.
+This app i made for friend, which is DJ, and he asked me if i can make app for hom, to faster download music from yt.
 
-Download a single video or an entire playlist with just a few clicks.
+So with lot of help with chatGPT i made this app.
+
+With this program you can download one song, or entire playlist of 5000 songs if you need.
+
+Compared to other apps, this is with no limit and has fastest download time per song.
 
 ## Features
 
