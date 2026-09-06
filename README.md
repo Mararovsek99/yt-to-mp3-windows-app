@@ -1,7 +1,7 @@
 # YouTube Downloader
 
 The fastest way to Download music from yt.
-This app i made for friend, which is DJ, and he asked me if i can make app for hom, to faster download music from yt.
+This app i made for friend, which is DJ, and he asked me if i can make app for him, to faster download music from yt.
 
 So with lot of help with chatGPT i made this app.
 
